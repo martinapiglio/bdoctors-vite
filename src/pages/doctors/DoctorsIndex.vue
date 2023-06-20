@@ -8,6 +8,8 @@ export default {
     return {
       users: [],
       specs: [],
+      reviews: [],
+      votes: [],
       filteredSpec: "",
       doctorsFound: false,
     };
@@ -29,11 +31,14 @@ export default {
         )
         .then((response) => {
           if (response.data.success) {
-            console.log(response.data.specs);
+
             this.users = response.data.results;
             this.specs = response.data.specs;
-            console.log(this.users);
-            console.log(this.specs);
+            this.reviews = response.data.reviews;
+            this.votes = response.data.votes;
+
+            // console.log(this.users);
+
             this.doctorsFound = true;
           } else {
             this.doctorsFound = false;
@@ -89,7 +94,7 @@ export default {
     </router-link>
 
   </div>
-  
+
 </template>
 
 <style></style>
