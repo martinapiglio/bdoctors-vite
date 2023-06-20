@@ -48,9 +48,7 @@ export default {
 
     getFilteredSpecs() {
       this.getUsers();
-      // this.$router.push('/doctors-search')
-      this.$router.push({ name: 'doctorsSearch', params: { filteredData: this.filteredSpec } });
-
+      this.$router.push({ name: 'doctorsSearch', params: { spec: this.filteredSpec } });
     },
   },
 };

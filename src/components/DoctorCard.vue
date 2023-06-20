@@ -69,7 +69,7 @@ export default {
           </li>
         </ul> -->
 
-        <div> Voto medio: {{ getAverageVote() }} / 10</div>
+        <!-- <div> Voto medio: {{ getAverageVote() }} / 10</div> -->
 
         <!-- voti:
         <ul>

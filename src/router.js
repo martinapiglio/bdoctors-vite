@@ -19,7 +19,7 @@ const router = createRouter({
     },
 
     {
-      path: '/doctors-search/',
+      path: '/doctors-search/:spec',
       name: 'doctorsSearch',
       component: DoctorsAdvancedResearch,
       meta: {
