@@ -12,7 +12,7 @@ export default {
   <div>
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
-        <span>home-header</span>
+        <span>bdoctors-header</span>
         <!-- <router-link
           class="navbar-brand"
           aria-current="page"

@@ -49,6 +49,7 @@ export default {
 </script>
 
 <template>
+
   homepage dottori
 
   <form action="">
@@ -79,6 +80,16 @@ export default {
       Nessun dottore trovato
     </div>
   </div>
+
+  <div>
+
+    <router-link
+        :to="{ name: 'home' }"
+        >torna alla home
+    </router-link>
+
+  </div>
+  
 </template>
 
 <style></style>
