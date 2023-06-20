@@ -13,7 +13,7 @@ export default {
 
   computed: {
     thumbnail() {
-      console.log(this.doctor.detail);
+      // console.log(this.doctor.detail);
       if(this.doctor.detail.profile_pic == null) {
         return 'http://127.0.0.1:8000/storage/profile_pic_folder/anonimo.jpg';
       } else {
@@ -69,7 +69,7 @@ export default {
           </li>
         </ul> -->
 
-        <!-- <div> Voto medio: {{ getAverageVote() }} / 10</div> -->
+        <div> Voto medio: {{ getAverageVote() }} / 10</div>
 
         <!-- voti:
         <ul>

@@ -27,7 +27,7 @@ export default {
     getUsers() {
       axios
         .get(
-          "http://127.0.0.1:8000/api/users" + "?mainspec=" + this.filteredSpec
+          "http://127.0.0.1:8000/api/users"
         )
         .then((response) => {
           if (response.data.success) {
@@ -36,8 +36,6 @@ export default {
             this.specs = response.data.specs;
             this.reviews = response.data.reviews;
             this.votes = response.data.votes;
-
-            // console.log(this.users);
 
             this.doctorsFound = true;
           } else {
