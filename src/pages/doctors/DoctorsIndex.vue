@@ -48,6 +48,9 @@ export default {
 
     getFilteredSpecs() {
       this.getUsers();
+      // this.$router.push('/doctors-search')
+      this.$router.push({ name: 'doctorsSearch', params: { filteredData: this.filteredSpec } });
+
     },
   },
 };
@@ -84,15 +87,6 @@ export default {
     <div role="alert" class="alert alert-warning text-center">
       Nessun dottore trovato
     </div>
-  </div>
-
-  <div>
-
-    <router-link
-        :to="{ name: 'home' }"
-        >torna alla home
-    </router-link>
-
   </div>
 
 </template>

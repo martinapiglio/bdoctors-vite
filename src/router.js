@@ -1,29 +1,30 @@
 import { createRouter, createWebHistory } from "vue-router";
 
-import AppHome from './pages/AppHome.vue';
 import DoctorsIndex from './pages/doctors/DoctorsIndex.vue';
+import DoctorsAdvancedResearch from './pages/doctors/DoctorsAdvancedResearch.vue';
 
 const router = createRouter({
   
   history: createWebHistory(),
 
   routes: [
+
     {
       path: '/',
       name: 'home',
-      component: AppHome,
+      component: DoctorsIndex,
       meta: {
-        title: 'Home'
-      },
+        title: 'Homepage'
+      }
     },
 
     {
-      path: '/doctors',
-      name: 'doctors',
-      component: DoctorsIndex,
+      path: '/doctors-search/',
+      name: 'doctorsSearch',
+      component: DoctorsAdvancedResearch,
       meta: {
-        title: 'Dottori'
-      }
+        title: 'Doctors Search'
+      },
     },
 
     // {
