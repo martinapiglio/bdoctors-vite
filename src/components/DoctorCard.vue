@@ -46,6 +46,7 @@ export default {
 </script>
 
 <template>
+
   <div class="card" style="width: 18rem">
     <img class="card-img-top" :src="thumbnail" alt="Card image cap" />
     <div class="card-body">
@@ -54,9 +55,7 @@ export default {
         <strong>Specializzazione: </strong> {{ doctor.mainspec }}
       </div>
       <div class="card-text">{{ doctor.description }}</div>
-      <p class="card-text">
-        <strong>Prestazioni: </strong> {{ doctor.detail.services }}
-      </p>
+
       <strong>Altre specializzazioni: </strong>
       <!-- specs -->
       <ul>
@@ -64,39 +63,22 @@ export default {
           {{ spec.title }}
         </li>
       </ul>
-      <!-- reviews -->
-      <!-- <ul>
-          <li v-for="review in doctor.reviews">
-            {{ review.name }}
-          </li>
-        </ul> -->
 
-      <div>Voto medio: {{ getAverageVote() }} / 10</div>
+      <div>
+        <strong>Voto medio: </strong>{{ getAverageVote() }} / 10
+      </div>
+
       <div>
         <strong>Numero di recensioni</strong>: {{ doctor.reviews.length }}
       </div>
 
-      <!-- voti:
-        <ul>
-          <li v-for="vote in doctor.votes">
-            {{ vote.voter }} {{ vote.vote }}
-          </li>
-        </ul> -->
-
-      <div class="card-text">
-        <strong>Indirizzo: </strong>{{ doctor.address }}
-      </div>
-      <div class="card-text"><strong>Email: </strong>{{ doctor.email }}</div>
-      <div class="card-text mb-3">
-        <strong>Num. telefono: </strong>{{ doctor.detail.phone_number }}
-      </div>
       <router-link
         :to="{
           name: 'doctor.show',
           params: { slug: doctor.slug, spec: doctor.mainspec },
         }"
         class="btn btn-outline-primary"
-        >Show the user</router-link
+        >Mostra dettagli</router-link
       >
     </div>
   </div>
