@@ -90,7 +90,14 @@ export default {
       <div class="card-text mb-3">
         <strong>Num. telefono: </strong>{{ doctor.detail.phone_number }}
       </div>
-      <a href="#" class="btn btn-primary">Dettagli</a>
+      <router-link
+        :to="{
+          name: 'doctor.show',
+          params: { slug: doctor.slug, spec: doctor.mainspec },
+        }"
+        class="btn btn-outline-primary"
+        >Show the user</router-link
+      >
     </div>
   </div>
 </template>
