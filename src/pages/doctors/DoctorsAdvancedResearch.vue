@@ -97,6 +97,14 @@ export default {
         )
         .then((response) => {
           if (response.data.success) {
+            console.log(
+              "http://127.0.0.1:8000/api/users" +
+                "?mainspec=" +
+                this.spec +
+                "&order=" +
+                this.descOrAsc
+            );
+            console.log(response.data);
             this.users = response.data.results;
             this.specs = response.data.specs;
           }
