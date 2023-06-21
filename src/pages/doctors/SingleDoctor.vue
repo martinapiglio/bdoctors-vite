@@ -16,6 +16,13 @@ export default {
         subject: '',
         message: '',
       },
+
+      formReview: {
+        userId: '',
+        name: '',
+        description: '',
+      }
+
     };
   },
   mounted() {
@@ -27,7 +34,10 @@ export default {
       axios
         .get("http://127.0.0.1:8000/api/users/" + this.doctorSlug)
         .then((response) => {
+          // set the userId var in formData and in formReview
           this.formData.userId = response.data.user.id;
+          this.formReview.userId = response.data.user.id;
+
           this.isLoading = false;
           if (response.data.success == true) {
             this.doctor = response.data.user;
@@ -42,9 +52,24 @@ export default {
     sendMessage() {
       axios.post('http://127.0.0.1:8000/api/messages', this.formData)
         .then(response => {
-          console.log(this.formData);
+
+          this.formData.userId = '';
+          this.formData.name = '';
+          this.formData.email = '';
+          this.formData.subject = '';
+          this.formData.message = '';
         });
     },
+
+    sendReview() {
+      axios.post('http://127.0.0.1:8000/api/reviews', this.formReview)
+        .then(response => {
+
+          this.formReview.userId = '';
+          this.formReview.name = '';
+          this.formReview.description = '';
+        });
+    }
 
   },
 };
@@ -125,6 +150,31 @@ export default {
         </div>
 
         <button class="btn btn-dark" type="submit">Invia messaggio</button>
+
+      </form>
+
+      <!-- send a review -->
+      <div><strong>Invia un recensione a questo dottore:</strong></div>
+
+      <form action="" method="POST" @submit.prevent="sendReview" class="mb-5">
+
+        <div>
+          <label for="name" class="col-md-4 col-form-label text-md-right">Nome</label>
+
+          <div>
+              <input id="name" type="text" class="form-control" name="name" v-model="formReview.name" required minlength="3" maxlength="50" autocomplete="name" autofocus>
+          </div>
+        </div>
+
+        <div>
+          <label for="description" class="col-md-4 col-form-label text-md-right">Recensione</label>
+
+          <div class="mb-3">
+              <textarea id="description" class="form-control" name="description" v-model="formReview.description" required minlength="3" maxlength="500"></textarea>
+          </div>
+        </div>
+
+        <button class="btn btn-dark" type="submit">Lascia recensione</button>
 
       </form>
 
