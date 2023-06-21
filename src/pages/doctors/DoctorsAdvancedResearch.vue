@@ -13,7 +13,7 @@ export default {
       spec: this.$route.params.spec,
       doctorsFound: false,
       userVote: "",
-      descOrAsc: "",
+      order: "",
     };
   },
 
@@ -76,6 +76,7 @@ export default {
             this.specs = response.data.specs;
             this.reviews = response.data.reviews;
             this.votes = response.data.votes;
+            this.order = "";
 
             // console.log(this.users);
 
@@ -85,30 +86,16 @@ export default {
           }
         });
     },
-    filteredByReviews() {
-      axios
-        .get(
-          "http://127.0.0.1:8000/api/users" +
-            "?mainspec=" +
-            this.spec +
-            "&" +
-            "?order=" +
-            this.descOrAsc
-        )
-        .then((response) => {
-          if (response.data.success) {
-            console.log(
-              "http://127.0.0.1:8000/api/users" +
-                "?mainspec=" +
-                this.spec +
-                "&order=" +
-                this.descOrAsc
-            );
-            console.log(response.data);
-            this.users = response.data.results;
-            this.specs = response.data.specs;
-          }
-        });
+    sortedUsers() {
+      return this.users.sort((a, b) => {
+        if (this.order === "asc") {
+          return a.reviews.length - b.reviews.length;
+        } else if (this.order === "desc") {
+          return b.reviews.length - a.reviews.length;
+        } else {
+          return 0;
+        }
+      });
     },
   },
 };
@@ -129,20 +116,22 @@ export default {
     </select>
   </form>
 
-  <form action="">
-    <label for="numberOfReviews">Ordina per numero di recensioni</label>
-    <select
-      class="form-select"
-      name="vote"
-      id="vote"
-      v-model="descOrAsc"
-      @change="filteredByReviews"
-    >
-      <option value="" disabled selected>Scegli un ordine</option>
-      <option value="asc">Cresecente</option>
-      <option value="desc">Decrescente</option>
-    </select>
-  </form>
+  <div v-if="doctorsFound">
+    <form action="">
+      <label for="numberOfReviews">Ordina per numero di recensioni</label>
+      <select
+        class="form-select"
+        name="numberOfReviews"
+        id="numberOfReviews"
+        v-model="order"
+        @change="sortedUsers"
+      >
+        <option value="" disabled selected>Scegli un ordine</option>
+        <option value="asc">Cresecente</option>
+        <option value="desc">Decrescente</option>
+      </select>
+    </form>
+  </div>
   <div
     v-if="doctorsFound"
     class="container d-flex justify-content-center flex-wrap gap-3 py-5"
