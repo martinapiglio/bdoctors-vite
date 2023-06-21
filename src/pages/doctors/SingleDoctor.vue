@@ -8,6 +8,14 @@ export default {
       doctorSlug: "",
       isLoading: true,
       doctorFound: false,
+
+      formData: {
+        userId: '',
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+      },
     };
   },
   mounted() {
@@ -19,7 +27,7 @@ export default {
       axios
         .get("http://127.0.0.1:8000/api/users/" + this.doctorSlug)
         .then((response) => {
-          console.log("doctor:", response);
+          this.formData.userId = response.data.user.id;
           this.isLoading = false;
           if (response.data.success == true) {
             this.doctor = response.data.user;
@@ -30,6 +38,14 @@ export default {
           }
         });
     },
+
+    sendMessage() {
+      axios.post('http://127.0.0.1:8000/api/messages', this.formData)
+        .then(response => {
+          console.log(this.formData);
+        });
+    },
+
   },
 };
 </script>
@@ -73,21 +89,22 @@ export default {
 
       <!-- send a message -->
       <div><strong>Invia un messaggio a questo dottore:</strong></div>
-      <form action="" class="mb-5">
+
+      <form action="" method="POST" @submit.prevent="sendMessage" class="mb-5">
 
         <div>
-          <label for="sender-name" class="col-md-4 col-form-label text-md-right">Nome</label>
+          <label for="name" class="col-md-4 col-form-label text-md-right">Nome</label>
 
           <div>
-              <input id="sender-name" type="text" class="form-control" name="sender-name" required minlength="3" maxlength="50" autocomplete="sender-name" autofocus>
+              <input id="name" type="text" class="form-control" name="name" v-model="formData.name" required minlength="3" maxlength="50" autocomplete="name" autofocus>
           </div>
         </div>
 
         <div>
-          <label for="sender-email" class="col-md-4 col-form-label text-md-right">Email</label>
+          <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
 
           <div>
-              <input id="sender-email" type="email" class="form-control" name="sender-email" required minlength="3" maxlength="500" autocomplete="sender-email" autofocus>
+              <input id="email" type="email" class="form-control" name="email" v-model="formData.email" required minlength="3" maxlength="500" autocomplete="email" autofocus>
           </div>
         </div>
         
@@ -95,7 +112,7 @@ export default {
           <label for="subject" class="col-md-4 col-form-label text-md-right">Oggetto del messaggio</label>
 
           <div>
-              <input id="subject" type="text" class="form-control" name="subject" required minlength="3" maxlength="100" autocomplete="subject" autofocus>
+              <input id="subject" type="text" class="form-control" name="subject" v-model="formData.subject" required minlength="3" maxlength="100" autocomplete="subject" autofocus>
           </div>
         </div>
 
@@ -103,7 +120,7 @@ export default {
           <label for="message" class="col-md-4 col-form-label text-md-right">Messaggio</label>
 
           <div class="mb-3">
-              <textarea id="message" class="form-control" name="message" required minlength="3" maxlength="500"></textarea>
+              <textarea id="message" class="form-control" name="message" v-model="formData.message" required minlength="3" maxlength="500"></textarea>
           </div>
         </div>
 
