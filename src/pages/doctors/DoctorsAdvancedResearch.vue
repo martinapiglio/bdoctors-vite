@@ -12,7 +12,8 @@ export default {
       votes: [],
       spec: this.$route.params.spec,
       doctorsFound: false,
-      userVote: '',
+      userVote: "",
+      descOrAsc: "",
     };
   },
 
@@ -20,80 +21,133 @@ export default {
     DoctorCard,
   },
 
-  mounted() {
+  created() {
     this.getFilteredDocs();
+  },
 
+  computed: {
+    getCosoleLog() {
+      return console.log(this.userVote);
     },
-
-    computed: {
-        getCosoleLog() {
-            return console.log(this.userVote);
-        }
+    getDescOrAsc() {
+      return console.log(this.descOrAsc);
     },
+  },
 
   methods: {
     getFilteredDocs() {
-        axios.get('http://127.0.0.1:8000/api/users' + "?mainspec=" + this.spec).then((response) => {
+      axios
+        .get("http://127.0.0.1:8000/api/users" + "?mainspec=" + this.spec)
+        .then((response) => {
+          if (response.data.success) {
+            this.users = response.data.results;
+            this.specs = response.data.specs;
+            this.reviews = response.data.reviews;
+            this.votes = response.data.votes;
 
-            if (response.data.success) {
+            // console.log(this.users);
 
-                this.users = response.data.results;
-                this.specs = response.data.specs;
-                this.reviews = response.data.reviews;
-                this.votes = response.data.votes;
-
-                // console.log(this.users);
-
-                this.doctorsFound = true;
-            } else {
-                this.doctorsFound = false;
-            }
+            this.doctorsFound = true;
+          } else {
+            this.doctorsFound = false;
+          }
         });
     },
 
     filteredByVotes() {
-        axios.get('http://127.0.0.1:8000/api/users' + '?vote=' + this.userVote).then((response) => {
+      axios
+        .get(
+          "http://127.0.0.1:8000/api/users" +
+            "?mainspec=" +
+            this.spec +
+            "&vote=" +
+            this.userVote
+        )
+        .then((response) => {
+          if (response.data.success) {
+            console.log(
+              "http://127.0.0.1:8000/api/users" +
+                "?mainspec=" +
+                this.spec +
+                "&vote=" +
+                this.userVote
+            );
+            this.users = response.data.results;
+            this.specs = response.data.specs;
+            this.reviews = response.data.reviews;
+            this.votes = response.data.votes;
 
-            if (response.data.success) {
+            // console.log(this.users);
 
-                this.users = response.data.results;
-                this.specs = response.data.specs;
-                this.reviews = response.data.reviews;
-                this.votes = response.data.votes;
-
-                // console.log(this.users);
-
-                this.doctorsFound = true;
-            } else {
-                this.doctorsFound = false;
-            }
+            this.doctorsFound = true;
+          } else {
+            this.doctorsFound = false;
+          }
         });
-    }
-
-  }
-}
-
+    },
+    filteredByReviews() {
+      axios
+        .get(
+          "http://127.0.0.1:8000/api/users" +
+            "?mainspec=" +
+            this.spec +
+            "&" +
+            "?order=" +
+            this.descOrAsc
+        )
+        .then((response) => {
+          if (response.data.success) {
+            this.users = response.data.results;
+            this.specs = response.data.specs;
+          }
+        });
+    },
+  },
+};
 </script>
 
 <template>
+  <form action="">
+    <label for="vote">Ordina per voto medio</label>
+    <select
+      class="form-select"
+      name="vote"
+      id="vote"
+      v-model="userVote"
+      @change="filteredByVotes"
+    >
+      <option value="">Tutti</option>
+      <option v-for="number in 10" :value="number">{{ number }}</option>
+    </select>
+  </form>
 
-    <form action="">
-        <select
-            class="form-select"
-            name="vote"
-            id="vote"
-            v-model="userVote"
-            @change="filteredByVotes"
-            >
-        <option value="">Tutti</option>
-        <option v-for="number in 10" :value="number"> {{ number }} </option>
-        </select>
-    </form>
-
+  <form action="">
+    <label for="numberOfReviews">Ordina per numero di recensioni</label>
+    <select
+      class="form-select"
+      name="vote"
+      id="vote"
+      v-model="descOrAsc"
+      @change="filteredByReviews"
+    >
+      <option value="" disabled selected>Scegli un ordine</option>
+      <option value="asc">Cresecente</option>
+      <option value="desc">Decrescente</option>
+    </select>
+  </form>
+  <div
+    v-if="doctorsFound"
+    class="container d-flex justify-content-center flex-wrap gap-3 py-5"
+  >
     <div v-for="user in users">
       <DoctorCard :doctor="user"></DoctorCard>
     </div>
-
+  </div>
+  <div v-else>
+    <div role="alert" class="alert alert-warning text-center">
+      Nessun dottore trovato
+    </div>
+  </div>
 </template>
 
 <style></style>
