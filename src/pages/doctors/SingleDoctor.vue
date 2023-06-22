@@ -21,6 +21,12 @@ export default {
         userId: '',
         name: '',
         description: '',
+      },
+
+      formVote: {
+        userId: '',
+        voter: '',
+        vote: '',
       }
 
     };
@@ -34,9 +40,10 @@ export default {
       axios
         .get("http://127.0.0.1:8000/api/users/" + this.doctorSlug)
         .then((response) => {
-          // set the userId var in formData and in formReview
+          // set the userId var in formData + formReview + formVote
           this.formData.userId = response.data.user.id;
           this.formReview.userId = response.data.user.id;
+          this.formVote.userId = response.data.user.id;
 
           this.isLoading = false;
           if (response.data.success == true) {
@@ -68,6 +75,16 @@ export default {
           this.formReview.userId = '';
           this.formReview.name = '';
           this.formReview.description = '';
+        });
+    },
+
+    sendVote() {
+      axios.post('http://127.0.0.1:8000/api/votes', this.formVote)
+        .then(response => {
+
+          this.formVote.userId = '';
+          this.formVote.voter = '';
+          this.formVote.vote = '';
         });
     }
 
@@ -175,6 +192,35 @@ export default {
         </div>
 
         <button class="btn btn-dark" type="submit">Lascia recensione</button>
+
+      </form>
+
+      <!-- vote a doctor -->
+      <div><strong>Vota questo dottore:</strong></div>
+
+      <form action="" method="POST" @submit.prevent="sendVote" class="mb-5">
+
+        <div>
+          <label for="voter" class="col-md-4 col-form-label text-md-right">Nome</label>
+
+          <div>
+              <input id="voter" type="text" class="form-control" name="voter" v-model="formVote.voter" required minlength="3" maxlength="50" autocomplete="voter" autofocus>
+          </div>
+        </div>
+
+        <div>
+          <label for="vote" class="col-md-4 col-form-label text-md-right">Voto</label>
+
+          <div class="mb-3">
+            <select class="form-select" name="vote" id="vote" v-model="formVote.vote">
+              <option value="" disabled selected>Scegli un voto da assegnare al dottore</option>
+              <option v-for="number in 5" :value="number">{{ number }}</option>
+            </select>
+          </div>
+
+         </div>
+
+        <button class="btn btn-dark" type="submit">Vota</button>
 
       </form>
 

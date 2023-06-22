@@ -112,7 +112,7 @@ export default {
       @change="filteredByVotes"
     >
       <option value="">Tutti</option>
-      <option v-for="number in 10" :value="number">{{ number }}</option>
+      <option v-for="number in 5" :value="number">{{ number }}</option>
     </select>
   </form>
 
