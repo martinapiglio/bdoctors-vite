@@ -69,6 +69,11 @@ export default {
     },
 
     sendReview() {
+
+      if(this.formReview.name == '') {
+        this.formReview.name = 'Utente Anonimo'
+      } 
+
       axios.post('http://127.0.0.1:8000/api/reviews', this.formReview)
         .then(response => {
 
@@ -79,6 +84,11 @@ export default {
     },
 
     sendVote() {
+
+      if(this.formVote.voter == '') {
+        this.formVote.voter = 'Utente Anonimo'
+      } 
+
       axios.post('http://127.0.0.1:8000/api/votes', this.formVote)
         .then(response => {
 
@@ -179,7 +189,7 @@ export default {
           <label for="name" class="col-md-4 col-form-label text-md-right">Nome</label>
 
           <div>
-              <input id="name" type="text" class="form-control" name="name" v-model="formReview.name" required minlength="3" maxlength="50" autocomplete="name" autofocus>
+              <input id="name" type="text" class="form-control" name="name" v-model="formReview.name" minlength="3" maxlength="50" autocomplete="name" autofocus>
           </div>
         </div>
 
@@ -204,7 +214,7 @@ export default {
           <label for="voter" class="col-md-4 col-form-label text-md-right">Nome</label>
 
           <div>
-              <input id="voter" type="text" class="form-control" name="voter" v-model="formVote.voter" required minlength="3" maxlength="50" autocomplete="voter" autofocus>
+              <input id="voter" type="text" class="form-control" name="voter" v-model="formVote.voter" minlength="3" maxlength="50" autocomplete="voter" autofocus>
           </div>
         </div>
 
@@ -212,7 +222,7 @@ export default {
           <label for="vote" class="col-md-4 col-form-label text-md-right">Voto</label>
 
           <div class="mb-3">
-            <select class="form-select" name="vote" id="vote" v-model="formVote.vote">
+            <select class="form-select" name="vote" id="vote" v-model="formVote.vote" required>
               <option value="" disabled selected>Scegli un voto da assegnare al dottore</option>
               <option v-for="number in 5" :value="number">{{ number }}</option>
             </select>
