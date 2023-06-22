@@ -27,7 +27,16 @@ export default {
         userId: '',
         voter: '',
         vote: '',
-      }
+      },
+
+      errorMessage: '',
+      errorMessageFound: false,
+
+      errorReview: '',
+      errorReviewFound: false,
+
+      errorVote: '',
+      errorVoteFound: false,
 
     };
   },
@@ -57,6 +66,7 @@ export default {
     },
 
     sendMessage() {
+
       axios.post('http://127.0.0.1:8000/api/messages', this.formData)
         .then(response => {
 
@@ -65,22 +75,81 @@ export default {
           this.formData.email = '';
           this.formData.subject = '';
           this.formData.message = '';
-        });
+
+          this.errorMessageFound = false;
+
+        }).catch(error => {
+            // This will run when the request fails.
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              if (error.response.data.errors) {
+                // If errors is an object containing multiple messages
+                this.errorMessageFound = true;
+                this.errorMessage = Object.values(error.response.data.errors).join(', ');
+                // console.log(this.errorMessage);
+              } else if (error.response.data.message) {
+                // If the server sends back a single message
+                this.errorMessage = error.response.data.message;
+              } else {
+                this.errorMessage = "An unknown error occurred.";
+              }
+            } else if (error.request) {
+              // The request was made but no response was received
+              // error.request is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in Node.js
+              this.errorMessage = "No response received from the server.";
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              this.errorMessage = error.message;
+            }
+          });
     },
 
     sendReview() {
 
-      if(this.formReview.name == '') {
-        this.formReview.name = 'Utente Anonimo'
-      } 
+      // if(this.formReview.name == '') {
+      //   this.formReview.name = 'Utente Anonimo'
+      // } 
 
-      axios.post('http://127.0.0.1:8000/api/reviews', this.formReview)
+      axios.post('http://127.0.0.1:8000/api/reviews', {
+        userId: this.formReview.userId,
+        name: this.formReview.name || 'Utente Anonimo',
+        description: this.formReview.description,
+      })
         .then(response => {
 
-          this.formReview.userId = '';
-          this.formReview.name = '';
-          this.formReview.description = '';
-        });
+          this.resetForm();
+
+          this.errorReviewFound = false;
+
+        }).catch(error => {
+            // This will run when the request fails.
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              if (error.response.data.errors) {
+                // If errors is an object containing multiple messages
+                this.errorReviewFound = true;
+                this.errorReview = Object.values(error.response.data.errors).join(', ');
+                // console.log(this.errorReview);
+              } else if (error.response.data.message) {
+                // If the server sends back a single message
+                this.errorReview = error.response.data.message;
+              } else {
+                this.errorReview = "An unknown error occurred.";
+              }
+            } else if (error.request) {
+              // The request was made but no response was received
+              // error.request is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in Node.js
+              this.errorReview = "No response received from the server.";
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              this.errorReview = error.message;
+            }
+          });
+        
     },
 
     sendVote() {
@@ -95,7 +164,42 @@ export default {
           this.formVote.userId = '';
           this.formVote.voter = '';
           this.formVote.vote = '';
-        });
+
+          this.errorVoteFound = false;
+
+        }).catch(error => {
+            // This will run when the request fails.
+            if (error.response) {
+              // The request was made and the server responded with a status code
+              // that falls out of the range of 2xx
+              if (error.response.data.errors) {
+                // If errors is an object containing multiple messages
+                this.errorVoteFound = true;
+                this.errorVote = Object.values(error.response.data.errors).join(', ');
+                // console.log(this.errorVote);
+              } else if (error.response.data.message) {
+                // If the server sends back a single message
+                this.errorVote = error.response.data.message;
+              } else {
+                this.errorVote = "An unknown error occurred.";
+              }
+            } else if (error.request) {
+              // The request was made but no response was received
+              // error.request is an instance of XMLHttpRequest in the browser and an instance of
+              // http.ClientRequest in Node.js
+              this.errorVote = "No response received from the server.";
+            } else {
+              // Something happened in setting up the request that triggered an Error
+              this.errorVote = error.message;
+            }
+          });
+        
+    },
+
+    resetForm() {
+      this.formReview.userId = '';
+      this.formReview.name = '';
+      this.formReview.description = '';
     }
 
   },
@@ -142,7 +246,7 @@ export default {
       <!-- send a message -->
       <div><strong>Invia un messaggio a questo dottore:</strong></div>
 
-      <form action="" method="POST" @submit.prevent="sendMessage" class="mb-5">
+      <form action="" method="POST" @submit="sendMessage" class="mb-5">
 
         <div>
           <label for="name" class="col-md-4 col-form-label text-md-right">Nome</label>
@@ -151,29 +255,36 @@ export default {
               <input id="name" type="text" class="form-control" name="name" v-model="formData.name" required minlength="3" maxlength="50" autocomplete="name" autofocus>
           </div>
         </div>
-
+        
         <div>
           <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
-
+          
           <div>
-              <input id="email" type="email" class="form-control" name="email" v-model="formData.email" required minlength="3" maxlength="500" autocomplete="email" autofocus>
+            <input id="email" type="email" class="form-control" name="email" v-model="formData.email" required minlength="3" maxlength="500" autocomplete="email" autofocus>
           </div>
+          
         </div>
         
         <div>
           <label for="subject" class="col-md-4 col-form-label text-md-right">Oggetto del messaggio</label>
-
+          
           <div>
-              <input id="subject" type="text" class="form-control" name="subject" v-model="formData.subject" required minlength="3" maxlength="100" autocomplete="subject" autofocus>
+            <input id="subject" type="text" class="form-control" name="subject" v-model="formData.subject" required minlength="3" maxlength="100" autocomplete="subject" autofocus>
           </div>
         </div>
 
         <div>
+          
           <label for="message" class="col-md-4 col-form-label text-md-right">Messaggio</label>
 
           <div class="mb-3">
               <textarea id="message" class="form-control" name="message" v-model="formData.message" required minlength="3" maxlength="500"></textarea>
           </div>
+        </div>
+
+        <!-- erros -->
+        <div v-if="errorMessageFound">
+          {{ errorMessage }}
         </div>
 
         <button class="btn btn-dark" type="submit">Invia messaggio</button>
@@ -183,7 +294,7 @@ export default {
       <!-- send a review -->
       <div><strong>Invia un recensione a questo dottore:</strong></div>
 
-      <form action="" method="POST" @submit.prevent="sendReview" class="mb-5">
+      <form action="" method="POST" @submit="sendReview" class="mb-5">
 
         <div>
           <label for="name" class="col-md-4 col-form-label text-md-right">Nome</label>
@@ -201,6 +312,11 @@ export default {
           </div>
         </div>
 
+        <!-- erros -->
+        <div v-if="errorReviewFound">
+          {{ errorReview }}
+        </div>
+
         <button class="btn btn-dark" type="submit">Lascia recensione</button>
 
       </form>
@@ -208,7 +324,7 @@ export default {
       <!-- vote a doctor -->
       <div><strong>Vota questo dottore:</strong></div>
 
-      <form action="" method="POST" @submit.prevent="sendVote" class="mb-5">
+      <form action="" method="POST" @submit="sendVote" class="mb-5">
 
         <div>
           <label for="voter" class="col-md-4 col-form-label text-md-right">Nome</label>
@@ -229,6 +345,11 @@ export default {
           </div>
 
          </div>
+
+        <!-- erros -->
+        <div v-if="errorVoteFound">
+          {{ errorVote }}
+        </div>
 
         <button class="btn btn-dark" type="submit">Vota</button>
 
