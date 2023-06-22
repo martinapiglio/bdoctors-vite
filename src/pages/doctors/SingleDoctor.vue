@@ -79,6 +79,8 @@ export default {
           this.formReview.userId = response.data.user.id;
           this.formVote.userId = response.data.user.id;
 
+          console.log(response.data.user);
+
           this.isLoading = false;
           if (response.data.success == true) {
             this.doctor = response.data.user;

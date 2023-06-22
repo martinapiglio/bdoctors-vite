@@ -40,6 +40,9 @@ export default {
 
             this.doctorsFound = true;
             this.isLoading = false;
+
+            // how to retrieve end date from user number 1 (with pivot data)
+            console.log(response.data.results[0].detail.sponsorships[0].pivot.end_date)
           } else {
             this.doctorsFound = false;
           }
