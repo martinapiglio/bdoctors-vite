@@ -14,6 +14,7 @@ export default {
       doctorsFound: false,
       userVote: "",
       order: "",
+      isLoading: true,
     };
   },
 
@@ -48,6 +49,7 @@ export default {
             // console.log(this.users);
 
             this.doctorsFound = true;
+            this.isLoading = false;
           } else {
             this.doctorsFound = false;
           }
@@ -102,49 +104,65 @@ export default {
 </script>
 
 <template>
-  <form action="">
-    <label for="vote">Ordina per voto medio</label>
-    <select
-      class="form-select"
-      name="vote"
-      id="vote"
-      v-model="userVote"
-      @change="filteredByVotes"
-    >
-      <option value="">Tutti</option>
-      <option v-for="number in 5" :value="number">{{ number }}</option>
-    </select>
-  </form>
 
-  <div v-if="doctorsFound">
+  <div v-if="isLoading" class="text-center py-5">
+
+    <div id="spinner-container">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div v-else>
     <form action="">
-      <label for="numberOfReviews">Ordina per numero di recensioni</label>
+      <label for="vote">Filtra per voto medio</label>
       <select
         class="form-select"
-        name="numberOfReviews"
-        id="numberOfReviews"
-        v-model="order"
-        @change="sortedUsers"
+        name="vote"
+        id="vote"
+        v-model="userVote"
+        @change="filteredByVotes"
       >
-        <option value="" disabled selected>Scegli un ordine</option>
-        <option value="asc">Cresecente</option>
-        <option value="desc">Decrescente</option>
+        <option value="">Tutti</option>
+        <option v-for="number in 5" :value="number">{{ number }}</option>
       </select>
     </form>
-  </div>
-  <div
-    v-if="doctorsFound"
-    class="container d-flex justify-content-center flex-wrap gap-3 py-5"
-  >
-    <div v-for="user in users">
-      <DoctorCard :doctor="user"></DoctorCard>
+  
+    <div v-if="doctorsFound">
+      <form action="">
+        <label for="numberOfReviews">Ordina per numero di recensioni</label>
+        <select
+          class="form-select"
+          name="numberOfReviews"
+          id="numberOfReviews"
+          v-model="order"
+          @change="sortedUsers"
+        >
+          <option value="" disabled selected>Scegli un ordine</option>
+          <option value="asc">Cresecente</option>
+          <option value="desc">Decrescente</option>
+        </select>
+      </form>
     </div>
-  </div>
-  <div v-else>
-    <div role="alert" class="alert alert-warning text-center">
-      Nessun dottore trovato
+    <div
+      v-if="doctorsFound"
+      class="container d-flex justify-content-center flex-wrap gap-3 py-5"
+    >
+      <div v-for="user in users">
+        <DoctorCard :doctor="user"></DoctorCard>
+      </div>
     </div>
+    <div v-else>
+      <div role="alert" class="alert alert-warning text-center">
+        Nessun dottore trovato
+      </div>
+    </div>
+
   </div>
+
+
 </template>
 
 <style></style>

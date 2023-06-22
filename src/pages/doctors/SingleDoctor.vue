@@ -232,11 +232,17 @@ export default {
 };
 </script>
 <template>
-  <div v-if="isLoading" id="spinner-container">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
+
+  <div v-if="isLoading" class="text-center py-5">
+
+    <div id="spinner-container">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
+    
   </div>
+
   <div v-else class="container py-5">
     <div v-if="doctorFound">
       <h1>{{ doctor.name }} {{ doctor.surname }}</h1>
