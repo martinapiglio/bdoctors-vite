@@ -40,9 +40,34 @@ export default {
 
     };
   },
+
+  computed: {
+    
+    coverImage() {
+        if(this.doctor.detail.profile_pic) {
+          return 'http://127.0.0.1:8000/storage/' + this.doctor.detail.profile_pic;
+        } else {
+          return 'https://www.schiffner.com/wp-content/themes/schiff-responsive/images/noimage.jpg';
+        }
+      },
+
+      curriculum() {
+        if(this.doctor.detail.curriculum) {
+          return 'http://127.0.0.1:8000/storage/' + this.doctor.detail.curriculum;
+        } else {
+          return '#';
+        }
+      },
+
+      doctorSlug() {
+        return this.doctor.slug;
+      }
+  },
+
   mounted() {
     this.doctorSlug = this.$route.params.slug;
     this.getDoctor();
+    
   },
   methods: {
     getDoctor() {
@@ -62,13 +87,18 @@ export default {
           } else {
             this.postFound = false;
           }
-        });
+        }).catch((error) => {
+            console.error('lo user non esiste' + ' error:' + error);
+            // handle the error in a user-friendly way, e.g., show an error message
+        });;
     },
 
     sendMessage() {
 
       axios.post('http://127.0.0.1:8000/api/messages', this.formData)
         .then(response => {
+
+          location.reload();
 
           this.formData.userId = '';
           this.formData.name = '';
@@ -108,10 +138,6 @@ export default {
 
     sendReview() {
 
-      // if(this.formReview.name == '') {
-      //   this.formReview.name = 'Utente Anonimo'
-      // } 
-
       axios.post('http://127.0.0.1:8000/api/reviews', {
         userId: this.formReview.userId,
         name: this.formReview.name || 'Utente Anonimo',
@@ -119,7 +145,11 @@ export default {
       })
         .then(response => {
 
-          this.resetForm();
+          location.reload();
+
+          this.formReview.userId = '';
+          this.formReview.name = '';
+          this.formReview.description = '';
 
           this.errorReviewFound = false;
 
@@ -154,12 +184,14 @@ export default {
 
     sendVote() {
 
-      if(this.formVote.voter == '') {
-        this.formVote.voter = 'Utente Anonimo'
-      } 
-
-      axios.post('http://127.0.0.1:8000/api/votes', this.formVote)
+      axios.post('http://127.0.0.1:8000/api/votes',{
+        userId: this.formVote.userId,
+        voter: this.formVote.voter || 'Utente Anonimo',
+        vote: this.formVote.vote,
+      })
         .then(response => {
+
+          location.reload();
 
           this.formVote.userId = '';
           this.formVote.voter = '';
@@ -196,12 +228,6 @@ export default {
         
     },
 
-    resetForm() {
-      this.formReview.userId = '';
-      this.formReview.name = '';
-      this.formReview.description = '';
-    }
-
   },
 };
 </script>
@@ -215,6 +241,8 @@ export default {
     <div v-if="doctorFound">
       <h1>{{ doctor.name }} {{ doctor.surname }}</h1>
 
+      <img :src="coverImage" alt="">
+
       <div>
         <span><strong>Specializzazione principale: </strong>{{ doctor.mainspec }}</span>
       </div>
@@ -227,6 +255,10 @@ export default {
           </li>
         </ul>
       </div>
+
+      <div class="my-4">
+            <a :href="curriculum" target="_blank" class="btn btn-primary">Vedi il CV</a> 
+        </div>
 
       <div>
         <span><strong>Servizi: </strong>{{ doctor.detail.services }}</span>
@@ -246,7 +278,7 @@ export default {
       <!-- send a message -->
       <div><strong>Invia un messaggio a questo dottore:</strong></div>
 
-      <form action="" method="POST" @submit="sendMessage" class="mb-5">
+      <form action="" method="POST" @submit.prevent="sendMessage" class="mb-5">
 
         <div>
           <label for="name" class="col-md-4 col-form-label text-md-right">Nome</label>
@@ -294,7 +326,7 @@ export default {
       <!-- send a review -->
       <div><strong>Invia un recensione a questo dottore:</strong></div>
 
-      <form action="" method="POST" @submit="sendReview" class="mb-5">
+      <form action="" method="POST" @submit.prevent="sendReview" class="mb-5">
 
         <div>
           <label for="name" class="col-md-4 col-form-label text-md-right">Nome</label>
@@ -324,7 +356,7 @@ export default {
       <!-- vote a doctor -->
       <div><strong>Vota questo dottore:</strong></div>
 
-      <form action="" method="POST" @submit="sendVote" class="mb-5">
+      <form action="" method="POST" @submit.prevent="sendVote" class="mb-5">
 
         <div>
           <label for="voter" class="col-md-4 col-form-label text-md-right">Nome</label>
