@@ -37,10 +37,17 @@ export default {
       const formattedNow = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       return formattedNow;
     },
+
+    nonSponsoredUsers() {
+      // this.nonSponsoredUsers =
+      this.getNonSponsoredUsers();
+    },
   },
 
   created() {
     this.getUsers();
+    this.getSponsoredUsers();
+    console.log(this.sponsoredUsers);
   },
 
   methods: {
@@ -120,7 +127,7 @@ export default {
         }
       }
 
-      this.nonSponsoredUsers = usersWithoutSponsorships;
+      return usersWithoutSponsorships;
     },
 
     getAllUsers() {
@@ -164,10 +171,24 @@ export default {
       v-if="doctorsFound"
       class="container d-flex justify-content-center flex-wrap gap-3 py-5"
     >
-      <div v-if="sponsoredUsers.length > 0">
+      <h4>Medici in evidenza</h4>
+      <div v-if="getSponsoredUser">
         <div v-for="user in sponsoredUsers">
           <DoctorCard :doctor="user"></DoctorCard>
         </div>
+      </div>
+      <div v-else>
+        <span>Non ci sono medici in evidenza</span>
+      </div>
+
+      <h4>tutti gli altri medici</h4>
+      <div v-if="nonSponsoredUsers > 0">
+        <div v-for="user in nonSponsoredUsers">
+          <DoctorCard :doctor="user"></DoctorCard>
+        </div>
+      </div>
+      <div v-else>
+        <span>Non ci sono altri medici</span>
       </div>
     </div>
     <div v-else>
