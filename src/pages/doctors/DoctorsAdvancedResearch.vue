@@ -125,21 +125,26 @@ export default {
                 this.userVote
             );
             this.users = response.data.results;
+            console.log({ ...Object(this.users) });
             this.specs = response.data.specs;
             this.reviews = response.data.reviews;
             this.votes = response.data.votes;
             this.order = "";
+            this.getSponsoredUsers();
+            this.getNonSponsoredUsers();
 
             // console.log(this.users);
 
             this.doctorsFound = true;
           } else {
             this.doctorsFound = false;
+            this.isLoading = false;
           }
         });
     },
-    sortedUsers() {
-      return this.users.sort((a, b) => {
+
+    sortedUsers(array) {
+      return array.sort((a, b) => {
         if (this.order === "asc") {
           return a.reviews.length - b.reviews.length;
         } else if (this.order === "desc") {
@@ -149,6 +154,7 @@ export default {
         }
       });
     },
+
     getSponsoredUsers() {
       //sponsored users array
       let usersWithSponsorships = this.users.filter(
@@ -215,6 +221,11 @@ export default {
             this.doctorsFound = false;
             this.isLoading = false;
           }
+          this.$router.push({
+            name: "doctorsSearch",
+            params: { spec: this.specVModel },
+            replace: true,
+          });
         });
     },
   },
@@ -267,7 +278,7 @@ export default {
           name="numberOfReviews"
           id="numberOfReviews"
           v-model="order"
-          @change="sortedUsers"
+          @change="sortedUsers(this.sponsoredUsers)"
         >
           <option value="" disabled selected>Scegli un ordine</option>
           <option value="asc">Cresecente</option>
