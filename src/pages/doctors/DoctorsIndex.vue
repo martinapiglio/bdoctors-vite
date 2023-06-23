@@ -20,6 +20,24 @@ export default {
     DoctorCard,
   },
 
+  computed: {
+
+    formattedNow() {
+      const now = new Date();
+  
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0'); // Add leading zero if needed
+      const day = String(now.getDate()).padStart(2, '0'); // Add leading zero if needed
+  
+      const hours = String(now.getHours()).padStart(2, '0'); // Add leading zero if needed
+      const minutes = String(now.getMinutes()).padStart(2, '0'); // Add leading zero if needed
+      const seconds = String(now.getSeconds()).padStart(2, '0'); // Add leading zero if needed
+  
+      const formattedNow = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      return formattedNow;
+    }
+  },
+
   created() {
     this.getUsers();
   },
@@ -41,18 +59,57 @@ export default {
             this.doctorsFound = true;
             this.isLoading = false;
 
-            // how to retrieve end date from user number 1 (with pivot data)
-            console.log(response.data.results[0].detail.sponsorships[0].pivot.end_date)
+            //retrieve sponsorship pivot table end date from users for each user
+            for(let i=0; i< this.users.length; i++) {
+              if(response.data.results[i].detail.sponsorships.length > 0) {
+                console.log("id: " + response.data.results[i].id + ' - end_date: ' + response.data.results[i].detail.sponsorships[0].pivot.end_date)
+              } else {
+                console.log("id: " + response.data.results[i].id + " - l'utente non ha sponsorizzazioni attive")
+              }
+            } 
+
+            //sponsored users array
+            let usersWithSponsorships = this.users.filter(user => user.detail.sponsorships.length > 0 && user.detail.sponsorships[0].pivot.end_date > this.formattedNow);
+            usersWithSponsorships.sort((a, b) => {
+
+              if(b.detail.sponsorships[0].id === a.detail.sponsorships[0].id) {
+                return new Date(b.detail.sponsorships[0].pivot.end_date) - new Date(a.detail.sponsorships[0].pivot.end_date);
+              } else {
+                return b.detail.sponsorships[0].id - a.detail.sponsorships[0].id;
+              }
+
+            });
+
+            console.log(usersWithSponsorships);
+
+            //non-sponsored users array
+            let usersWithoutSponsorships = [];
+            for (let i = 0; i < this.users.length; i++) {
+              if (this.users[i].detail.sponsorships.length === 0 || this.users[i].detail.sponsorships[0].pivot.end_date < this.formattedNow){
+                usersWithoutSponsorships.push(this.users[i]);
+              }
+            } 
+
+            console.log(usersWithoutSponsorships);
+
+            //merged array -- should maintain the order because you concatenate the first array (alrady ordered by end_date) with second one
+            let usersAll = usersWithSponsorships.concat(usersWithoutSponsorships);
+            console.log(usersAll);
+
+            this.users = usersAll;
+
           } else {
             this.doctorsFound = false;
           }
         });
-    },
+      },
+    
 
     getFilteredSpecs() {
       this.getUsers();
       this.$router.push({ name: 'doctorsSearch', params: { spec: this.filteredSpec } });
     },
+
   },
 };
 </script>

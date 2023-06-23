@@ -265,8 +265,8 @@ export default {
       </div>
 
       <div class="my-4">
-            <a :href="curriculum" target="_blank" class="btn btn-primary">Vedi il CV</a> 
-        </div>
+        <a :href="curriculum" target="_blank" class="btn btn-primary">Vedi il CV</a> 
+      </div>
 
       <div>
         <span><strong>Servizi: </strong>{{ doctor.detail.services }}</span>
