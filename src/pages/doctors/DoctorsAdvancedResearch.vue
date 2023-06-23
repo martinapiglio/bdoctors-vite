@@ -120,9 +120,10 @@ export default {
             console.log(
               "http://127.0.0.1:8000/api/users" +
                 "?mainspec=" +
-                this.spec +
-                "&vote=" +
-                this.userVote
+                this.specVModel ==
+                ""
+                ? this.spec
+                : this.specVModel + "&vote=" + this.userVote
             );
             this.users = response.data.results;
             console.log({ ...Object(this.users) });
