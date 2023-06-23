@@ -83,6 +83,7 @@ export default {
           this.getNonSponsoredUsers();
         } else {
           this.doctorsFound = false;
+          this.isLoading = false;
         }
       });
     },
