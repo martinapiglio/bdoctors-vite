@@ -143,6 +143,17 @@ export default {
         });
     },
 
+    // sortedUsers() {
+    //   return array.sort((a, b) => {
+    //     if (this.order === "asc") {
+    //       return a.reviews.length - b.reviews.length;
+    //     } else if (this.order === "desc") {
+    //       return b.reviews.length - a.reviews.length;
+    //     } else {
+    //       return 0;
+    //     }
+    //   });
+    // },
     sortedUsers(array) {
       return array.sort((a, b) => {
         if (this.order === "asc") {
@@ -153,6 +164,10 @@ export default {
           return 0;
         }
       });
+    },
+    sortAll() {
+      this.sponsoredUsers = this.sortedUsers(this.sponsoredUsers);
+      this.otherArray = this.sortedUsers(this.nonSponsoredUsers);
     },
 
     getSponsoredUsers() {
@@ -278,7 +293,7 @@ export default {
           name="numberOfReviews"
           id="numberOfReviews"
           v-model="order"
-          @change="sortedUsers(this.sponsoredUsers)"
+          @change="sortAll"
         >
           <option value="" disabled selected>Scegli un ordine</option>
           <option value="asc">Cresecente</option>
