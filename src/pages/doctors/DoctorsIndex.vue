@@ -1,14 +1,20 @@
 <script>
 import axios from "axios";
 import DoctorCard from "../../components/DoctorCard.vue";
+import { resolveTransitionHooks } from "vue";
 
 export default {
   name: "DoctorIndex",
   data() {
     return {
       users: [],
+
+      sponsoredPresent: "",
       sponsoredUsers: [],
+
+      nonSponsoredPresent: "",
       nonSponsoredUsers: [],
+
       specs: [],
       reviews: [],
       votes: [],
@@ -37,17 +43,10 @@ export default {
       const formattedNow = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       return formattedNow;
     },
-
-    nonSponsoredUsers() {
-      // this.nonSponsoredUsers =
-      this.getNonSponsoredUsers();
-    },
   },
 
   created() {
     this.getUsers();
-    this.getSponsoredUsers();
-    console.log(this.sponsoredUsers);
   },
 
   methods: {
@@ -79,6 +78,9 @@ export default {
               );
             }
           }
+
+          this.getSponsoredUsers();
+          this.getNonSponsoredUsers();
         } else {
           this.doctorsFound = false;
         }
@@ -111,7 +113,12 @@ export default {
         }
       });
 
-      this.sponsoredUsers = usersWithSponsorships;
+      if (usersWithSponsorships.length > 0) {
+        this.sponsoredUsers = usersWithSponsorships;
+        this.sponsoredPresent = true;
+      } else {
+        this.sponsoredPresent = false;
+      }
     },
 
     getNonSponsoredUsers() {
@@ -127,7 +134,12 @@ export default {
         }
       }
 
-      return usersWithoutSponsorships;
+      if (usersWithoutSponsorships.length > 0) {
+        this.nonSponsoredUsers = usersWithoutSponsorships;
+        this.nonSponsoredPresent = true;
+      } else {
+        this.nonSponsoredPresent = false;
+      }
     },
 
     getAllUsers() {
@@ -167,12 +179,12 @@ export default {
       </select>
     </form>
 
-    <div
-      v-if="doctorsFound"
-      class="container d-flex justify-content-center flex-wrap gap-3 py-5"
-    >
-      <h4>Medici in evidenza</h4>
-      <div v-if="getSponsoredUser">
+    <div v-if="doctorsFound" class="container">
+      <h4 class="text-center mt-5">Medici in evidenza</h4>
+      <div
+        v-if="sponsoredPresent"
+        class="d-flex justify-content-center flex-wrap gap-3 py-5"
+      >
         <div v-for="user in sponsoredUsers">
           <DoctorCard :doctor="user"></DoctorCard>
         </div>
@@ -181,8 +193,11 @@ export default {
         <span>Non ci sono medici in evidenza</span>
       </div>
 
-      <h4>tutti gli altri medici</h4>
-      <div v-if="nonSponsoredUsers > 0">
+      <h4 class="text-center mt-5">tutti gli altri medici</h4>
+      <div
+        v-if="nonSponsoredPresent"
+        class="d-flex justify-content-center flex-wrap gap-3 py-5"
+      >
         <div v-for="user in nonSponsoredUsers">
           <DoctorCard :doctor="user"></DoctorCard>
         </div>
