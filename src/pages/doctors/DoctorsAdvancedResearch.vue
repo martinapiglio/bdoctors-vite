@@ -11,12 +11,14 @@ export default {
       reviews: [],
       votes: [],
       spec: this.$route.params.spec,
+      specVModel: "",
       doctorsFound: false,
       userVote: "",
       order: "",
       isLoading: true,
       sponsoredPresent: "",
       sponsoredUsers: [],
+      filteredSpec: "",
 
       nonSponsoredPresent: "",
       nonSponsoredUsers: [],
@@ -55,6 +57,32 @@ export default {
   },
 
   methods: {
+    getUsers() {
+      axios.get("http://127.0.0.1:8000/api/users").then((response) => {
+        if (response.data.success) {
+          this.users = response.data.results;
+          this.specs = response.data.specs;
+          this.reviews = response.data.reviews;
+          this.votes = response.data.votes;
+
+          this.doctorsFound = true;
+          this.isLoading = false;
+
+          this.getSponsoredUsers();
+          this.getNonSponsoredUsers();
+        } else {
+          this.doctorsFound = false;
+          this.isLoading = false;
+        }
+      });
+    },
+    // getFilteredSpecs() {
+    //   this.getUsers();
+    //   this.$router({
+    //     name: "doctorsSearch",
+    //     params: { spec: this.filteredSpec },
+    //   });
+    // },
     getFilteredDocs() {
       axios
         .get("http://127.0.0.1:8000/api/users" + "?mainspec=" + this.spec)
@@ -167,6 +195,28 @@ export default {
         this.nonSponsoredPresent = false;
       }
     },
+    getFilteredDocsInPage() {
+      axios
+        .get("http://127.0.0.1:8000/api/users" + "?mainspec=" + this.specVModel)
+        .then((response) => {
+          if (response.data.success) {
+            this.users = response.data.results;
+            this.specs = response.data.specs;
+            this.reviews = response.data.reviews;
+            this.votes = response.data.votes;
+
+            // console.log(this.users);
+
+            this.doctorsFound = true;
+            this.isLoading = false;
+            this.getSponsoredUsers();
+            this.getNonSponsoredUsers();
+          } else {
+            this.doctorsFound = false;
+            this.isLoading = false;
+          }
+        });
+    },
   },
 };
 </script>
@@ -182,20 +232,34 @@ export default {
 
   <div v-else>
     <form action="">
-      <label for="vote">Filtra per voto medio</label>
       <select
         class="form-select"
-        name="vote"
-        id="vote"
-        v-model="userVote"
-        @change="filteredByVotes"
+        name="mainspec"
+        id="mainspec"
+        v-model="specVModel"
+        @change="getFilteredDocsInPage"
       >
-        <option value="">Tutti</option>
-        <option v-for="number in 5" :value="number">{{ number }}</option>
+        <option value="">Tutte</option>
+        <option v-for="spec in specs" :value="spec.title">
+          {{ spec.title }}
+        </option>
       </select>
     </form>
 
     <div v-if="doctorsFound">
+      <form action="">
+        <label for="vote">Filtra per voto medio</label>
+        <select
+          class="form-select"
+          name="vote"
+          id="vote"
+          v-model="userVote"
+          @change="filteredByVotes"
+        >
+          <option value="">Tutti</option>
+          <option v-for="number in 5" :value="number">{{ number }}</option>
+        </select>
+      </form>
       <form action="">
         <label for="numberOfReviews">Ordina per numero di recensioni</label>
         <select
