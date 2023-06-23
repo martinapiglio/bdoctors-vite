@@ -46,7 +46,6 @@ export default {
 </script>
 
 <template>
-
   <div class="card" style="width: 18rem">
     <img class="card-img-top" :src="thumbnail" alt="Card image cap" />
     <div class="card-body">
@@ -64,9 +63,7 @@ export default {
         </li>
       </ul>
 
-      <div>
-        <strong>Voto medio: </strong>{{ getAverageVote() }} / 10
-      </div>
+      <div><strong>Voto medio: </strong>{{ getAverageVote() }} / 5</div>
 
       <div>
         <strong>Numero di recensioni</strong>: {{ doctor.reviews.length }}
