@@ -11,7 +11,6 @@ export default {
 
   computed: {
     thumbnail() {
-      // console.log(this.doctor.detail);
       if (this.doctor.detail.profile_pic == null) {
         return "http://127.0.0.1:8000/storage/profile_pic_folder/anonimo.jpg";
       } else {
@@ -56,7 +55,7 @@ export default {
       <div class="card-text">{{ doctor.description }}</div>
 
       <strong>Altre specializzazioni: </strong>
-      <!-- specs -->
+      <!-- other specs -->
       <ul>
         <li v-for="spec in doctor.detail.specs">
           {{ spec.title }}

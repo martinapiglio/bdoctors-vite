@@ -6,9 +6,8 @@ export default {
     return {
       doctor: {},
       doctorSlug: "",
-      isLoading: true,
-      doctorFound: false,
 
+      // data from message form
       formData: {
         userId: "",
         name: "",
@@ -17,18 +16,21 @@ export default {
         message: "",
       },
 
+      // data from review form
       formReview: {
         userId: "",
         name: "",
         description: "",
       },
 
+      // data from vote form
       formVote: {
         userId: "",
         voter: "",
         vote: "",
       },
 
+      // variables to handle errors when one of the input validations messages/reviews/votes form sending is not fulfilled
       errorMessage: "",
       errorMessageFound: false,
 
@@ -37,17 +39,21 @@ export default {
 
       errorVote: "",
       errorVoteFound: false,
+
+      // loading page + doctor found variables
+      isLoading: true,
+      doctorFound: false,
     };
   },
 
   computed: {
-    coverImage() {
-      if (this.doctor.detail.profile_pic) {
+    thumbnail() {
+      if (this.doctor.detail.profile_pic == null) {
+        return "http://127.0.0.1:8000/storage/profile_pic_folder/anonimo.jpg";
+      } else {
         return (
           "http://127.0.0.1:8000/storage/" + this.doctor.detail.profile_pic
         );
-      } else {
-        return "https://www.schiffner.com/wp-content/themes/schiff-responsive/images/noimage.jpg";
       }
     },
 
@@ -58,16 +64,13 @@ export default {
         return "#";
       }
     },
-
-    doctorSlug() {
-      return this.doctor.slug;
-    },
   },
 
   mounted() {
     this.doctorSlug = this.$route.params.slug;
     this.getDoctor();
   },
+
   methods: {
     getDoctor() {
       axios
@@ -78,20 +81,22 @@ export default {
           this.formReview.userId = response.data.user.id;
           this.formVote.userId = response.data.user.id;
 
-          console.log(response.data.user);
-
           this.isLoading = false;
+
           if (response.data.success == true) {
             this.doctor = response.data.user;
-            document.title = "BDoctor - " + this.doctor.name;
+            document.title = "BDoctor - " + this.doctor.slug;
+
             this.doctorFound = true;
           } else {
-            this.postFound = false;
+            this.doctorFound = false;
+            this.isLoading = false;
           }
         })
         .catch((error) => {
           console.error("lo user non esiste" + " error:" + error);
-          // handle the error in a user-friendly way, e.g., show an error message
+          this.doctorFound = false;
+          this.isLoading = false;
         });
     },
 
@@ -110,28 +115,23 @@ export default {
           this.errorMessageFound = false;
         })
         .catch((error) => {
-          // This will run when the request fails.
           if (error.response) {
             // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
             if (error.response.data.errors) {
               // If errors is an object containing multiple messages
               this.errorMessageFound = true;
               this.errorMessage = Object.values(
                 error.response.data.errors
               ).join(", ");
-              // console.log(this.errorMessage);
             } else if (error.response.data.message) {
               // If the server sends back a single message
               this.errorMessage = error.response.data.message;
             } else {
-              this.errorMessage = "An unknown error occurred.";
+              this.errorMessage = "Si è verificato un errore sconosciuto";
             }
           } else if (error.request) {
             // The request was made but no response was received
-            // error.request is an instance of XMLHttpRequest in the browser and an instance of
-            // http.ClientRequest in Node.js
-            this.errorMessage = "No response received from the server.";
+            this.errorMessage = "Nessuna risposta ricevuta dal server";
           } else {
             // Something happened in setting up the request that triggered an Error
             this.errorMessage = error.message;
@@ -156,28 +156,23 @@ export default {
           this.errorReviewFound = false;
         })
         .catch((error) => {
-          // This will run when the request fails.
           if (error.response) {
             // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
             if (error.response.data.errors) {
               // If errors is an object containing multiple messages
               this.errorReviewFound = true;
               this.errorReview = Object.values(error.response.data.errors).join(
                 ", "
               );
-              // console.log(this.errorReview);
             } else if (error.response.data.message) {
               // If the server sends back a single message
               this.errorReview = error.response.data.message;
             } else {
-              this.errorReview = "An unknown error occurred.";
+              this.errorReview = "Si è verificato un errore sconosciuto";
             }
           } else if (error.request) {
             // The request was made but no response was received
-            // error.request is an instance of XMLHttpRequest in the browser and an instance of
-            // http.ClientRequest in Node.js
-            this.errorReview = "No response received from the server.";
+            this.errorReview = "Nessuna risposta ricevuta dal server";
           } else {
             // Something happened in setting up the request that triggered an Error
             this.errorReview = error.message;
@@ -202,28 +197,23 @@ export default {
           this.errorVoteFound = false;
         })
         .catch((error) => {
-          // This will run when the request fails.
           if (error.response) {
             // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
             if (error.response.data.errors) {
               // If errors is an object containing multiple messages
               this.errorVoteFound = true;
               this.errorVote = Object.values(error.response.data.errors).join(
                 ", "
               );
-              // console.log(this.errorVote);
             } else if (error.response.data.message) {
               // If the server sends back a single message
               this.errorVote = error.response.data.message;
             } else {
-              this.errorVote = "An unknown error occurred.";
+              this.errorVote = "Si è verificato un errore sconosciuto";
             }
           } else if (error.request) {
             // The request was made but no response was received
-            // error.request is an instance of XMLHttpRequest in the browser and an instance of
-            // http.ClientRequest in Node.js
-            this.errorVote = "No response received from the server.";
+            this.errorVote = "Nessuna risposta ricevuta dal server";
           } else {
             // Something happened in setting up the request that triggered an Error
             this.errorVote = error.message;
@@ -233,7 +223,9 @@ export default {
   },
 };
 </script>
+
 <template>
+  <!-- spinner - is loading page -->
   <div v-if="isLoading" class="text-center py-5">
     <div id="spinner-container">
       <div class="spinner-border" role="status">
@@ -242,11 +234,13 @@ export default {
     </div>
   </div>
 
+  <!-- when loading is finished -->
   <div v-else class="container py-5">
+    <!-- single doctor is found -->
     <div v-if="doctorFound">
       <h1>{{ doctor.name }} {{ doctor.surname }}</h1>
 
-      <img :src="coverImage" alt="" />
+      <img :src="thumbnail" style="width: 250px" alt="doctor profile pic" />
 
       <div>
         <span
@@ -294,7 +288,7 @@ export default {
       <form action="" method="POST" @submit.prevent="sendMessage" class="mb-5">
         <div>
           <label for="name" class="col-md-4 col-form-label text-md-right"
-            >Nome</label
+            >Nome *</label
           >
 
           <div>
@@ -315,7 +309,7 @@ export default {
 
         <div>
           <label for="email" class="col-md-4 col-form-label text-md-right"
-            >Email</label
+            >Email *</label
           >
 
           <div>
@@ -336,7 +330,7 @@ export default {
 
         <div>
           <label for="subject" class="col-md-4 col-form-label text-md-right"
-            >Oggetto del messaggio</label
+            >Oggetto del messaggio *</label
           >
 
           <div>
@@ -357,7 +351,7 @@ export default {
 
         <div>
           <label for="message" class="col-md-4 col-form-label text-md-right"
-            >Messaggio</label
+            >Messaggio *</label
           >
 
           <div class="mb-3">
@@ -376,6 +370,10 @@ export default {
         <!-- erros -->
         <div v-if="errorMessageFound">
           {{ errorMessage }}
+        </div>
+
+        <div class="mb-3">
+          I campi contrassegnati con un asterisco sono obbligatori
         </div>
 
         <button class="btn btn-dark" type="submit">Invia messaggio</button>
@@ -407,7 +405,7 @@ export default {
 
         <div>
           <label for="description" class="col-md-4 col-form-label text-md-right"
-            >Recensione</label
+            >Recensione *</label
           >
 
           <div class="mb-3">
@@ -428,10 +426,14 @@ export default {
           {{ errorReview }}
         </div>
 
+        <div class="mb-3">
+          I campi contrassegnati con un asterisco sono obbligatori
+        </div>
+
         <button class="btn btn-dark" type="submit">Lascia recensione</button>
       </form>
 
-      <!-- vote a doctor -->
+      <!-- vote the doctor -->
       <div><strong>Vota questo dottore:</strong></div>
 
       <form action="" method="POST" @submit.prevent="sendVote" class="mb-5">
@@ -457,7 +459,7 @@ export default {
 
         <div>
           <label for="vote" class="col-md-4 col-form-label text-md-right"
-            >Voto</label
+            >Voto *</label
           >
 
           <div class="mb-3">
@@ -481,12 +483,17 @@ export default {
           {{ errorVote }}
         </div>
 
+        <div class="mb-3">
+          I campi contrassegnati con un asterisco sono obbligatori
+        </div>
+
         <button class="btn btn-dark" type="submit">Vota</button>
       </form>
 
+      <!-- reviews -->
       <div>
-        <div v-if="doctor.reviews">
-          <div><strong>Recensioni:</strong></div>
+        <div><strong>Recensioni:</strong></div>
+        <div v-if="doctor.reviews.length > 0">
           <div>
             <ul>
               <li v-for="rev in doctor.reviews">
@@ -496,13 +503,19 @@ export default {
             </ul>
           </div>
         </div>
+        <div v-else>
+          <i>Non ci sono ancora recensioni per questo medico.</i>
+        </div>
       </div>
     </div>
+
+    <!-- the single doctor is not found -->
     <div v-else>
       <div class="alert alert-danger text-center" role="alert">
-        No doctor found
+        Non è stato trovato nessun dottore
       </div>
     </div>
   </div>
 </template>
+
 <style lang="scss" scoped></style>

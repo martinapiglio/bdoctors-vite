@@ -7,18 +7,24 @@ export default {
   name: "DoctorIndex",
   data() {
     return {
+      // all users
       users: [],
 
+      // sponsored users - with sponsorship
       sponsoredPresent: "",
       sponsoredUsers: [],
 
+      // non-sponsored users - without sponsorship
       nonSponsoredPresent: "",
       nonSponsoredUsers: [],
 
+      // get all the existing spec in order to fill the form select
       specs: [],
-      reviews: [],
-      votes: [],
+
+      // spec chosen by the guest user to filter doctors
       filteredSpec: "",
+
+      // loading page + doctor found variables
       doctorsFound: false,
       isLoading: true,
     };
@@ -33,12 +39,12 @@ export default {
       const now = new Date();
 
       const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0"); // Add leading zero if needed
-      const day = String(now.getDate()).padStart(2, "0"); // Add leading zero if needed
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
 
-      const hours = String(now.getHours()).padStart(2, "0"); // Add leading zero if needed
-      const minutes = String(now.getMinutes()).padStart(2, "0"); // Add leading zero if needed
-      const seconds = String(now.getSeconds()).padStart(2, "0"); // Add leading zero if needed
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const seconds = String(now.getSeconds()).padStart(2, "0");
 
       const formattedNow = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       return formattedNow;
@@ -51,41 +57,46 @@ export default {
 
   methods: {
     getUsers() {
-      axios.get("http://127.0.0.1:8000/api/users").then((response) => {
-        if (response.data.success) {
-          this.users = response.data.results;
+      axios
+        .get("http://127.0.0.1:8000/api/users")
+        .then((response) => {
           this.specs = response.data.specs;
-          this.reviews = response.data.reviews;
-          this.votes = response.data.votes;
+          if (response.data.success) {
+            this.users = response.data.results;
 
-          this.doctorsFound = true;
-          this.isLoading = false;
+            this.doctorsFound = true;
+            this.isLoading = false;
 
-          //retrieve sponsorship pivot table end date from users for each user
-          for (let i = 0; i < this.users.length; i++) {
-            if (response.data.results[i].detail.sponsorships.length > 0) {
-              console.log(
-                "id: " +
-                  response.data.results[i].id +
-                  " - end_date: " +
-                  response.data.results[i].detail.sponsorships[0].pivot.end_date
-              );
-            } else {
-              console.log(
-                "id: " +
-                  response.data.results[i].id +
-                  " - l'utente non ha sponsorizzazioni attive"
-              );
-            }
+            this.getSponsoredUsers();
+            this.getNonSponsoredUsers();
+
+            //retrieve sponsorship pivot table end date from users for each user
+            // for (let i = 0; i < this.users.length; i++) {
+            //   if (response.data.results[i].detail.sponsorships.length > 0) {
+            //     console.log(
+            //       "id: " +
+            //         response.data.results[i].id +
+            //         " - end_date: " +
+            //         response.data.results[i].detail.sponsorships[0].pivot.end_date
+            //     );
+            //   } else {
+            //     console.log(
+            //       "id: " +
+            //         response.data.results[i].id +
+            //         " - l'utente non ha sponsorizzazioni attive"
+            //     );
+            //   }
+            // }
+          } else {
+            this.doctorsFound = false;
+            this.isLoading = false;
           }
-
-          this.getSponsoredUsers();
-          this.getNonSponsoredUsers();
-        } else {
-          this.doctorsFound = false;
+        })
+        .catch((error) => {
+          console.error("Non sono stati trovati dottori" + " error:" + error);
+          this.doctorFound = false;
           this.isLoading = false;
-        }
-      });
+        });
     },
 
     getFilteredSpecs() {
@@ -146,7 +157,6 @@ export default {
     getAllUsers() {
       //merged array -- should maintain the order because you concatenate the first array (alrady ordered by end_date) with second one
       let usersAll = this.sponsoredUsers.concat(this.nonSponsoredUsers);
-
       this.users = usersAll;
     },
   },
@@ -154,8 +164,8 @@ export default {
 </script>
 
 <template>
-  homepage dottori
-
+  <h1>Tutti i dottori</h1>
+  <!-- spinner - is loading page -->
   <div v-if="isLoading" class="text-center py-5">
     <div id="spinner-container">
       <div class="spinner-border" role="status">
@@ -164,8 +174,10 @@ export default {
     </div>
   </div>
 
+  <!-- when loading is finished -->
   <div v-else>
     <form action="">
+      <label for="mainspec">Seleziona una specializzazione</label>
       <select
         class="form-select"
         name="mainspec"
@@ -180,7 +192,9 @@ export default {
       </select>
     </form>
 
+    <!-- doctors are found -->
     <div v-if="doctorsFound" class="container">
+      <!-- sponsored doctors -->
       <h4 class="text-center mt-5">Medici in evidenza</h4>
       <div
         v-if="sponsoredPresent"
@@ -194,6 +208,7 @@ export default {
         <span>Non ci sono medici in evidenza</span>
       </div>
 
+      <!-- non-sponsored doctors -->
       <h4 class="text-center mt-5">tutti gli altri medici</h4>
       <div
         v-if="nonSponsoredPresent"
@@ -207,6 +222,8 @@ export default {
         <span>Non ci sono altri medici</span>
       </div>
     </div>
+
+    <!-- there are no doctors in the selected spec -->
     <div v-else>
       <div role="alert" class="alert alert-warning text-center">
         Nessun dottore trovato

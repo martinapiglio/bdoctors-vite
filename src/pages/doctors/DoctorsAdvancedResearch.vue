@@ -3,25 +3,36 @@ import axios from "axios";
 import DoctorCard from "../../components/DoctorCard.vue";
 
 export default {
-  name: "DoctorIndex",
+  name: "DoctorAdvancedReserach",
   data() {
     return {
+      // all users
       users: [],
-      specs: [],
-      reviews: [],
-      votes: [],
-      spec: this.$route.params.spec,
-      specVModel: "",
-      doctorsFound: false,
-      userVote: "",
-      order: "",
-      isLoading: true,
+
+      // sponsored users - with sponsorship
       sponsoredPresent: "",
       sponsoredUsers: [],
-      filteredSpec: "",
 
+      // non-sponsored users - without sponsorship
       nonSponsoredPresent: "",
       nonSponsoredUsers: [],
+
+      // get all the existing spec in order to fill the form select
+      specs: [],
+
+      // filtered spec deriving from filter applied in previous page (in DoctorsIndex page is filteredSpec)
+      spec: this.$route.params.spec,
+
+      // spec chosen by the guest user to filter doctors (it overwrites the variable 'spec' above defined)
+      specVModel: "",
+
+      //filter by vote + asc/desc order from forms
+      userVote: "",
+      order: "",
+
+      // loading page + doctor found variables
+      isLoading: true,
+      doctorsFound: false,
     };
   },
 
@@ -44,12 +55,12 @@ export default {
       const now = new Date();
 
       const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, "0"); // Add leading zero if needed
-      const day = String(now.getDate()).padStart(2, "0"); // Add leading zero if needed
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
 
-      const hours = String(now.getHours()).padStart(2, "0"); // Add leading zero if needed
-      const minutes = String(now.getMinutes()).padStart(2, "0"); // Add leading zero if needed
-      const seconds = String(now.getSeconds()).padStart(2, "0"); // Add leading zero if needed
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const seconds = String(now.getSeconds()).padStart(2, "0");
 
       const formattedNow = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
       return formattedNow;
@@ -57,32 +68,6 @@ export default {
   },
 
   methods: {
-    getUsers() {
-      axios.get("http://127.0.0.1:8000/api/users").then((response) => {
-        if (response.data.success) {
-          this.users = response.data.results;
-          this.specs = response.data.specs;
-          this.reviews = response.data.reviews;
-          this.votes = response.data.votes;
-
-          this.doctorsFound = true;
-          this.isLoading = false;
-
-          this.getSponsoredUsers();
-          this.getNonSponsoredUsers();
-        } else {
-          this.doctorsFound = false;
-          this.isLoading = false;
-        }
-      });
-    },
-    // getFilteredSpecs() {
-    //   this.getUsers();
-    //   this.$router({
-    //     name: "doctorsSearch",
-    //     params: { spec: this.filteredSpec },
-    //   });
-    // },
     getFilteredDocs() {
       axios
         .get("http://127.0.0.1:8000/api/users" + "?mainspec=" + this.spec)
@@ -92,8 +77,6 @@ export default {
             this.specs = response.data.specs;
             this.reviews = response.data.reviews;
             this.votes = response.data.votes;
-
-            // console.log(this.users);
 
             this.doctorsFound = true;
             this.isLoading = false;
@@ -144,17 +127,6 @@ export default {
         });
     },
 
-    // sortedUsers() {
-    //   return array.sort((a, b) => {
-    //     if (this.order === "asc") {
-    //       return a.reviews.length - b.reviews.length;
-    //     } else if (this.order === "desc") {
-    //       return b.reviews.length - a.reviews.length;
-    //     } else {
-    //       return 0;
-    //     }
-    //   });
-    // },
     sortedUsers(array) {
       return array.sort((a, b) => {
         if (this.order === "asc") {
@@ -249,6 +221,7 @@ export default {
 </script>
 
 <template>
+  <!-- spinner - is loading page -->
   <div v-if="isLoading" class="text-center py-5">
     <div id="spinner-container">
       <div class="spinner-border" role="status">
@@ -257,8 +230,18 @@ export default {
     </div>
   </div>
 
+  <!-- when loading is finished -->
   <div v-else>
+    <h2>Ricerca avanzata</h2>
+    <!-- link to homepage with all doctors -->
+    <div class="my-4">
+      <router-link :to="{ name: 'home' }"
+        >Torna alla homepage con tutti i dottori
+      </router-link>
+    </div>
+    <!-- change the specialization selection -->
     <form action="">
+      <label for="mainspec">Cambia la specializzazione</label>
       <select
         class="form-select"
         name="mainspec"
@@ -273,7 +256,8 @@ export default {
       </select>
     </form>
 
-    <div v-if="doctorsFound">
+    <!-- votes filter -->
+    <div>
       <form action="">
         <label for="vote">Filtra per voto medio</label>
         <select
@@ -287,6 +271,11 @@ export default {
           <option v-for="number in 5" :value="number">{{ number }}</option>
         </select>
       </form>
+    </div>
+
+    <!-- doctors are found -->
+    <div v-if="doctorsFound">
+      <!-- reviews order -->
       <form action="">
         <label for="numberOfReviews">Ordina per numero di recensioni</label>
         <select
@@ -301,40 +290,45 @@ export default {
           <option value="desc">Decrescente</option>
         </select>
       </form>
-    </div>
-    <div
-      v-if="doctorsFound"
-      class="container d-flex justify-content-center flex-wrap gap-3 py-5"
-    >
-      <h4 class="text-center mt-5">Medici in evidenza</h4>
-      <div
-        v-if="sponsoredPresent"
-        class="d-flex justify-content-center flex-wrap gap-3 py-5"
-      >
-        <div v-for="user in sponsoredUsers">
-          <DoctorCard :doctor="user"></DoctorCard>
-        </div>
-      </div>
-      <div v-else>
-        <span>Non ci sono medici in evidenza</span>
-      </div>
 
-      <h4 class="text-center mt-5">tutti gli altri medici</h4>
-      <div
-        v-if="nonSponsoredPresent"
-        class="d-flex justify-content-center flex-wrap gap-3 py-5"
-      >
-        <div v-for="user in nonSponsoredUsers">
-          <DoctorCard :doctor="user"></DoctorCard>
+      <!-- doctors cards visualisation -->
+      <div class="container">
+        <!-- sponsored doctors -->
+        <h4 class="text-center mt-5">Medici in evidenza</h4>
+
+        <div
+          v-if="sponsoredPresent"
+          class="d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
+        >
+          <div v-for="user in sponsoredUsers">
+            <DoctorCard :doctor="user"></DoctorCard>
+          </div>
+        </div>
+        <div v-else>
+          <span>Non ci sono medici in evidenza</span>
+        </div>
+
+        <!-- non-sponsored doctors -->
+        <h4 class="text-center mt-5">tutti gli altri medici</h4>
+
+        <div
+          v-if="nonSponsoredPresent"
+          class="d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
+        >
+          <div v-for="user in nonSponsoredUsers">
+            <DoctorCard :doctor="user"></DoctorCard>
+          </div>
+        </div>
+        <div v-else>
+          <span>Non ci sono altri medici</span>
         </div>
       </div>
-      <div v-else>
-        <span>Non ci sono altri medici</span>
-      </div>
     </div>
+
+    <!-- there are no doctors in the selected spec -->
     <div v-else>
       <div role="alert" class="alert alert-warning text-center">
-        Nessun dottore trovato
+        <span>Nessun dottore trovato</span>
       </div>
     </div>
   </div>
