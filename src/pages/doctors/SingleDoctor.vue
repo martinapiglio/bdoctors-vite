@@ -544,7 +544,7 @@ export default {
     <!-- the single doctor is not found -->
     <div v-else>
       <div class="alert alert-danger text-center __main-color" role="alert">
-        Non è stato trovato nessun dottore
+        Non è stato trovato alcun dottore
       </div>
     </div>
   </div>
