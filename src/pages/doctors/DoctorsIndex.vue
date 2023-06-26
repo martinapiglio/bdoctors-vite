@@ -164,7 +164,6 @@ export default {
 </script>
 
 <template>
-  <h1>Tutti i dottori</h1>
   <!-- spinner - is loading page -->
   <div v-if="isLoading" class="text-center py-5">
     <div id="spinner-container">
@@ -176,21 +175,30 @@ export default {
 
   <!-- when loading is finished -->
   <div v-else>
-    <form action="">
-      <label for="mainspec">Seleziona una specializzazione</label>
-      <select
-        class="form-select"
-        name="mainspec"
-        id="mainspec"
-        v-model="filteredSpec"
-        @change="getFilteredSpecs"
-      >
-        <option value="">Tutte</option>
-        <option v-for="spec in specs" :value="spec.title">
-          {{ spec.title }}
-        </option>
-      </select>
-    </form>
+    <section class="title-spec-form p-5 text-white">
+      <h1 class="text-center pb-5 title-big">Benvenuto su BDoctors!</h1>
+      <h4 class="subtitle text-center pb-5">
+        Bdoctors è la piattaforma che unisce i migliori professionisti e ti
+        permette di cercarli in comodità con un solo click!
+      </h4>
+      <form action="">
+        <label for="mainspec" class="pb-2"
+          >Per iniziare, seleziona una specializzazione:</label
+        >
+        <select
+          class="form-select"
+          name="mainspec"
+          id="mainspec"
+          v-model="filteredSpec"
+          @change="getFilteredSpecs"
+        >
+          <option value="">Tutte</option>
+          <option v-for="spec in specs" :value="spec.title">
+            {{ spec.title }}
+          </option>
+        </select>
+      </form>
+    </section>
 
     <!-- doctors are found -->
     <div v-if="doctorsFound" class="container">
@@ -232,4 +240,16 @@ export default {
   </div>
 </template>
 
-<style></style>
+<style lang="scss" scoped>
+.title-spec-form {
+  background-color: #293b63;
+  .title-big {
+    text-shadow: 0px 3px 0px #b2a98f, 0px 10px 10px rgba(0, 0, 0, 0.15),
+      0px 15px 2px rgba(0, 0, 0, 0.1), 0px 10px 30px rgba(0, 0, 0, 0.1);
+  }
+}
+
+input:hover {
+  cursor: pointer;
+}
+</style>

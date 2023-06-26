@@ -1,35 +1,28 @@
 <script>
-import AppHeader from './components/AppHeader.vue';
-import AppFooter from './components/AppFooter.vue';
+import AppHeader from "./components/AppHeader.vue";
+import AppFooter from "./components/AppFooter.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   data() {
-    return {
-    }
+    return {};
   },
 
   components: {
     AppHeader,
-    AppFooter
+    AppFooter,
   },
-
-}
-
+};
 </script>
 
 <template>
   <AppHeader></AppHeader>
-  
-  <div class="container">
-    
-    <router-view></router-view>
 
+  <div>
+    <router-view></router-view>
   </div>
 
   <AppFooter></AppFooter>
 </template>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>
