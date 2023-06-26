@@ -218,7 +218,11 @@ export default {
 
 <template>
   <!-- spinner - is loading page -->
-  <div v-if="isLoading" class="text-center py-5">
+  <div
+    v-if="isLoading"
+    class="text-center py-5 d-flex flex-column align-items-center justify-content-center gap-3 text-white spinner"
+  >
+    <div>Loading...</div>
     <div id="spinner-container">
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -330,4 +334,6 @@ export default {
   </div>
 </template>
 
-<style></style>
+<style lang="scss" scoped>
+@use "../../components/style/_variables.scss" as *;
+</style>

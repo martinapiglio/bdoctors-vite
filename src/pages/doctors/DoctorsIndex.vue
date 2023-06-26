@@ -165,7 +165,11 @@ export default {
 
 <template>
   <!-- spinner - is loading page -->
-  <div v-if="isLoading" class="text-center py-5">
+  <div
+    v-if="isLoading"
+    class="text-center py-5 d-flex flex-column align-items-center justify-content-center gap-3 text-white spinner"
+  >
+    <div>Loading...</div>
     <div id="spinner-container">
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
@@ -181,7 +185,7 @@ export default {
         Bdoctors è la piattaforma che unisce i migliori professionisti e ti
         permette di cercarli in comodità con un solo click!
       </h4>
-      <form action="">
+      <form action="" id="mainspec-form">
         <label for="mainspec" class="pb-2"
           >Per iniziare, seleziona una specializzazione:</label
         >
@@ -203,7 +207,7 @@ export default {
     <!-- doctors are found -->
     <div v-if="doctorsFound" class="container">
       <!-- sponsored doctors -->
-      <h4 class="text-center mt-5">Medici in evidenza</h4>
+      <h4 class="text-center mt-5 section-title">Medici in evidenza</h4>
       <div
         v-if="sponsoredPresent"
         class="d-flex justify-content-center flex-wrap gap-3 py-5"
@@ -217,7 +221,7 @@ export default {
       </div>
 
       <!-- non-sponsored doctors -->
-      <h4 class="text-center mt-5">tutti gli altri medici</h4>
+      <h4 class="text-center mt-5 section-title">Tutti gli altri medici</h4>
       <div
         v-if="nonSponsoredPresent"
         class="d-flex justify-content-center flex-wrap gap-3 py-5"
@@ -241,15 +245,31 @@ export default {
 </template>
 
 <style lang="scss" scoped>
+@use "../../components/style/_variables.scss" as *;
 .title-spec-form {
-  background-color: #293b63;
+  background-color: $blue;
   .title-big {
     text-shadow: 0px 3px 0px #b2a98f, 0px 10px 10px rgba(0, 0, 0, 0.15),
       0px 15px 2px rgba(0, 0, 0, 0.1), 0px 10px 30px rgba(0, 0, 0, 0.1);
   }
-}
 
-input:hover {
-  cursor: pointer;
+  .subtitle {
+    text-shadow: 0px 10px 10px rgba(0, 0, 0, 0.15),
+      0px 8px 2px rgba(0, 0, 0, 0.1), 0px 10px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  #mainspec-form {
+    padding: 2rem;
+    border-radius: 15px;
+    background-color: $darker-blue;
+
+    select {
+      cursor: pointer;
+    }
+  }
+}
+.section-title {
+  font-size: 32px;
+  color: $green;
 }
 </style>

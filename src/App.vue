@@ -18,11 +18,16 @@ export default {
 <template>
   <AppHeader></AppHeader>
 
-  <div>
+  <div id="outer-container">
     <router-view></router-view>
   </div>
 
   <AppFooter></AppFooter>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+@use "./components/style/_variables.scss" as *;
+#outer-container {
+  padding-top: $header-height;
+}
+</style>

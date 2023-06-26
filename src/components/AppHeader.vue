@@ -20,31 +20,75 @@ export default {
         alt="bdoctors-logo-img"
       />
 
-      <div class="nav-item active">
-        <a class="nav-link" href="#">Home </a>
+      <div class="nav-item active links-container">
+        <a class="nav-link links" href="">Home </a>
       </div>
     </div>
 
-    <div class="nav-item d-flex align-items-center gap-3">
-      <span> Sei un dottore? </span>
-      <a class="btn btn-primary" href="http://127.0.0.1:8000/register">
-        Registrati
-      </a>
-      <a class="btn btn-primary" href="http://127.0.0.1:8000/login">
-        Fai il login
-      </a>
+    <div class="nav-item d-flex align-items-center gap-3 px-4">
+      <span id="are-u-doctor"> Sei un dottore? </span>
+      <div class="links-container">
+        <a class="links" href="http://127.0.0.1:8000/register"> Registrati </a>
+      </div>
+      <div class="links-container">
+        <a class="links" href="http://127.0.0.1:8000/login"> Fai il login </a>
+      </div>
     </div>
   </nav>
 </template>
 
 <style lang="scss" scoped>
+@use "./style/_variables.scss" as *;
 nav {
-  height: 7rem;
+  position: fixed;
+  z-index: 2;
+  width: 100%;
+  height: $header-height;
   #logo-home-container {
     height: 100%;
     #logo-img {
       height: 100%;
     }
+  }
+  #are-u-doctor {
+    color: $blue;
+  }
+
+  .links-container {
+    position: relative;
+    transition: all 0.2s;
+    .links {
+      position: relative;
+      font-weight: bold;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .links::after {
+      content: "";
+      position: absolute;
+      width: 100%;
+      transform: scaleX(0);
+      height: 2px;
+      top: 1.3rem;
+      left: 0;
+      background-color: $green;
+      transform-origin: bottom right;
+      transition: transform 0.25s ease-out;
+    }
+  }
+
+  .links-container:hover {
+    color: $green;
+    cursor: pointer;
+    .links::after {
+      transform: scaleX(1);
+      transform-origin: bottom left;
+    }
+  }
+  .links:hover {
+    cursor: pointer;
+    color: $green;
   }
 }
 </style>
