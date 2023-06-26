@@ -21,7 +21,7 @@ export default {
       />
 
       <div class="nav-item active links-container">
-        <a class="nav-link links" href="">Home </a>
+        <a class="nav-link links" href="/">Home </a>
       </div>
     </div>
 
@@ -54,6 +54,10 @@ nav {
     color: $blue;
   }
 
+  router-link {
+    text-decoration: none;
+  }
+
   .links-container {
     position: relative;
     transition: all 0.2s;
@@ -76,6 +80,10 @@ nav {
       transform-origin: bottom right;
       transition: transform 0.25s ease-out;
     }
+
+    .links:hover {
+      color: $green;
+    }
   }
 
   .links-container:hover {
@@ -85,10 +93,6 @@ nav {
       transform: scaleX(1);
       transform-origin: bottom left;
     }
-  }
-  .links:hover {
-    cursor: pointer;
-    color: $green;
   }
 }
 </style>

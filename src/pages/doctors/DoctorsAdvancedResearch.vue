@@ -232,69 +232,77 @@ export default {
 
   <!-- when loading is finished -->
   <div v-else>
-    <h2>Ricerca avanzata</h2>
-    <!-- link to homepage with all doctors -->
-    <div class="my-4">
-      <router-link :to="{ name: 'home' }"
-        >Torna alla homepage con tutti i dottori
-      </router-link>
-    </div>
-    <!-- change the specialization selection -->
-    <form action="">
-      <label for="mainspec">Cambia la specializzazione</label>
-      <select
-        class="form-select"
-        name="mainspec"
-        id="mainspec"
-        v-model="specVModel"
-        @change="getFilteredDocsInPage"
-      >
-        <option value="">Tutte</option>
-        <option v-for="spec in specs" :value="spec.title">
-          {{ spec.title }}
-        </option>
-      </select>
-    </form>
+    <section class="adv-research p-5 text-white">
+      <h2>Ricerca avanzata</h2>
+      <!-- link to homepage with all doctors -->
+      <div class="my-4">
+        <router-link class="back-link" :to="{ name: 'home' }"
+          >Torna alla homepage con tutti i dottori
+        </router-link>
+      </div>
+      <!-- change the specialization selection -->
+      <div id="spec-votes-form-container">
+        <form action="" class="pb-2">
+          <label for="mainspec" class="pb-2">Cambia la specializzazione</label>
+          <select
+            class="form-select"
+            name="mainspec"
+            id="mainspec"
+            v-model="specVModel"
+            @change="getFilteredDocsInPage"
+          >
+            <option value="">Tutte</option>
+            <option v-for="spec in specs" :value="spec.title">
+              {{ spec.title }}
+            </option>
+          </select>
+        </form>
 
-    <!-- votes filter -->
-    <div v-if="users.length >= 1">
-      <form action="">
-        <label for="vote">Filtra per voto medio</label>
-        <select
-          class="form-select"
-          name="vote"
-          id="vote"
-          v-model="userVote"
-          @change="filteredByVotes"
-        >
-          <option value="">Tutti</option>
-          <option v-for="number in 5" :value="number">{{ number }}</option>
-        </select>
-      </form>
-    </div>
+        <!-- votes filter -->
+        <div v-if="users.length >= 1">
+          <form action="" class="pb-2">
+            <label for="vote" class="pb-2">Filtra per voto medio</label>
+            <select
+              class="form-select"
+              name="vote"
+              id="vote"
+              v-model="userVote"
+              @change="filteredByVotes"
+            >
+              <option value="">Tutti</option>
+              <option v-for="number in 5" :value="number">{{ number }}</option>
+            </select>
+          </form>
+
+          <div v-if="doctorsFound">
+            <!-- reviews order -->
+            <form action="">
+              <label for="numberOfReviews" class="pb-2"
+                >Ordina per numero di recensioni</label
+              >
+              <select
+                class="form-select"
+                name="numberOfReviews"
+                id="numberOfReviews"
+                v-model="order"
+                @change="sortAll"
+              >
+                <option value="" disabled selected>Scegli un ordine</option>
+                <option value="asc">Crescente</option>
+                <option value="desc">Decrescente</option>
+              </select>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- doctors are found -->
     <div v-if="doctorsFound">
-      <!-- reviews order -->
-      <form action="">
-        <label for="numberOfReviews">Ordina per numero di recensioni</label>
-        <select
-          class="form-select"
-          name="numberOfReviews"
-          id="numberOfReviews"
-          v-model="order"
-          @change="sortAll"
-        >
-          <option value="" disabled selected>Scegli un ordine</option>
-          <option value="asc">Cresecente</option>
-          <option value="desc">Decrescente</option>
-        </select>
-      </form>
-
       <!-- doctors cards visualisation -->
       <div class="container">
         <!-- sponsored doctors -->
-        <h4 class="text-center mt-5">Medici in evidenza</h4>
+        <h4 class="text-center mt-5 section-title">Medici in evidenza</h4>
 
         <div
           v-if="sponsoredPresent"
@@ -304,12 +312,12 @@ export default {
             <DoctorCard :doctor="user"></DoctorCard>
           </div>
         </div>
-        <div v-else>
+        <div v-else class="text-center pb-5 pt-4">
           <span>Non ci sono medici in evidenza</span>
         </div>
 
         <!-- non-sponsored doctors -->
-        <h4 class="text-center mt-5">tutti gli altri medici</h4>
+        <h4 class="text-center mt-5 section-title">Tutti gli altri medici</h4>
 
         <div
           v-if="nonSponsoredPresent"
@@ -319,16 +327,22 @@ export default {
             <DoctorCard :doctor="user"></DoctorCard>
           </div>
         </div>
-        <div v-else>
+        <div v-else class="text-center pb-5 pt-4">
           <span>Non ci sono altri medici</span>
         </div>
       </div>
     </div>
 
     <!-- there are no doctors in the selected spec -->
-    <div v-else>
+    <div
+      v-else
+      class="d-flex justify-content-center align-items-center p-2 alert-section"
+    >
       <div role="alert" class="alert alert-warning text-center">
-        <span>Nessun dottore trovato</span>
+        <span
+          >Non è stato trovato nessun dottore, riprova con un'altra
+          categoria</span
+        >
       </div>
     </div>
   </div>
@@ -336,4 +350,31 @@ export default {
 
 <style lang="scss" scoped>
 @use "../../components/style/_variables.scss" as *;
+
+.adv-research {
+  background-color: $blue;
+
+  .back-link {
+    color: white;
+    transition: all 0.2s;
+
+    &:hover {
+      color: $green;
+    }
+  }
+
+  #spec-votes-form-container {
+    padding: 2rem;
+    border-radius: 15px;
+    background-color: $darker-blue;
+
+    select {
+      cursor: pointer;
+    }
+  }
+}
+
+.alert-section {
+  height: calc(100% - $header-height);
+}
 </style>
