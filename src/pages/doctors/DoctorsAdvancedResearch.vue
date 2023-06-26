@@ -72,11 +72,11 @@ export default {
       axios
         .get("http://127.0.0.1:8000/api/users" + "?mainspec=" + this.spec)
         .then((response) => {
+          this.specs = response.data.specs;
+          console.log(response.data.specs);
+
           if (response.data.success) {
             this.users = response.data.results;
-            this.specs = response.data.specs;
-            this.reviews = response.data.reviews;
-            this.votes = response.data.votes;
 
             this.doctorsFound = true;
             this.isLoading = false;
@@ -94,22 +94,14 @@ export default {
         .get(
           "http://127.0.0.1:8000/api/users" +
             "?mainspec=" +
-            this.spec +
+            (this.specVModel == "" ? this.spec : this.specVModel) +
             "&vote=" +
             this.userVote
         )
         .then((response) => {
           if (response.data.success) {
-            console.log(
-              "http://127.0.0.1:8000/api/users" +
-                "?mainspec=" +
-                this.specVModel ==
-                ""
-                ? this.spec
-                : this.specVModel + "&vote=" + this.userVote
-            );
             this.users = response.data.results;
-            console.log({ ...Object(this.users) });
+            // console.log({ ...Object(this.users) });
             this.specs = response.data.specs;
             this.reviews = response.data.reviews;
             this.votes = response.data.votes;
@@ -138,6 +130,7 @@ export default {
         }
       });
     },
+
     sortAll() {
       this.sponsoredUsers = this.sortedUsers(this.sponsoredUsers);
       this.otherArray = this.sortedUsers(this.nonSponsoredUsers);
@@ -189,6 +182,7 @@ export default {
         this.nonSponsoredPresent = false;
       }
     },
+
     getFilteredDocsInPage() {
       axios
         .get("http://127.0.0.1:8000/api/users" + "?mainspec=" + this.specVModel)
@@ -205,6 +199,8 @@ export default {
             this.isLoading = false;
             this.getSponsoredUsers();
             this.getNonSponsoredUsers();
+
+            this.userVote = "";
           } else {
             this.doctorsFound = false;
             this.isLoading = false;
@@ -257,7 +253,7 @@ export default {
     </form>
 
     <!-- votes filter -->
-    <div>
+    <div v-if="users.length >= 1">
       <form action="">
         <label for="vote">Filtra per voto medio</label>
         <select

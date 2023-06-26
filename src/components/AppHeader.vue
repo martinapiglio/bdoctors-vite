@@ -13,6 +13,18 @@ export default {
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
       <div class="container-fluid">
         <span>bdoctors-header</span>
+        <!-- PROVVISORIO PER COLLEGAMENTO A LARAVEL -->
+        <span>
+          Sei un dottore?
+          <a class="btn btn-primary" href="http://127.0.0.1:8000/register">
+            Registrati
+          </a>
+          <a class="btn btn-primary mx-3" href="http://127.0.0.1:8000/login">
+            Fai il login
+          </a>
+        </span>
+        <!-- //PROVVISORIO PER COLLEGAMENTO A LARAVEL -->
+
         <!-- <router-link
           class="navbar-brand"
           aria-current="page"
