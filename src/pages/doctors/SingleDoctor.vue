@@ -240,18 +240,24 @@ export default {
     <div v-if="doctorFound">
       <h1>{{ doctor.name }} {{ doctor.surname }}</h1>
 
+      <hr />
+
       <img :src="thumbnail" style="width: 250px" alt="doctor profile pic" />
 
       <div>
-        <span
-          ><strong>Specializzazione principale: </strong
-          >{{ doctor.mainspec }}</span
+        <label for="__mainspec"
+          ><strong>Specializzazione principale: </strong></label
         >
+        <div id="__mainspec">
+          {{ doctor.mainspec }}
+        </div>
       </div>
 
       <div>
-        <strong>Altre specializzazioni: </strong>
-        <ul>
+        <label for="__other-specs"
+          ><strong>Altre specializzazioni: </strong></label
+        >
+        <ul id="__other-specs">
           <li v-for="spec in doctor.detail.specs">
             {{ spec.title }}
           </li>
@@ -268,22 +274,31 @@ export default {
       </div>
 
       <div>
-        <span><strong>Servizi: </strong>{{ doctor.detail.services }}</span>
+        <label for="__services"><strong>Servizi: </strong></label>
+        <div id="__services">{{ doctor.detail.services }}</div>
       </div>
 
-      <strong>Indirizzo: </strong>{{ doctor.address }}
+      <div>
+        <label for="__address"><strong>Indirizzo: </strong></label>
+        <div id="__address">{{ doctor.address }}</div>
+      </div>
 
-      <div><strong>Email: </strong>{{ doctor.email }}</div>
+      <div>
+        <label for="__email"><strong>Email: </strong></label>
+        <div id="__email">{{ doctor.email }}</div>
+      </div>
 
       <div class="mb-4">
-        <span
-          ><strong>Numero di telefono: </strong
-          >{{ doctor.detail.phone_number }}</span
+        <label for="__phone-number"
+          ><strong>Numero di telefono: </strong></label
         >
+        <div id="__phone-number">{{ doctor.detail.phone_number }}</div>
       </div>
 
+      <hr />
+
       <!-- send a message -->
-      <div><strong>Invia un messaggio a questo dottore:</strong></div>
+      <h5>Invia un messaggio a questo dottore:</h5>
 
       <form action="" method="POST" @submit.prevent="sendMessage" class="mb-5">
         <div>
@@ -372,15 +387,17 @@ export default {
           {{ errorMessage }}
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 __main-color">
           I campi contrassegnati con un asterisco sono obbligatori
         </div>
 
-        <button class="btn btn-dark" type="submit">Invia messaggio</button>
+        <button class="btn btn-primary" type="submit">Invia messaggio</button>
       </form>
 
+      <hr />
+
       <!-- send a review -->
-      <div><strong>Invia un recensione a questo dottore:</strong></div>
+      <h5>Invia un recensione a questo dottore:</h5>
 
       <form action="" method="POST" @submit.prevent="sendReview" class="mb-5">
         <div>
@@ -426,17 +443,23 @@ export default {
           {{ errorReview }}
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 __main-color">
           I campi contrassegnati con un asterisco sono obbligatori
         </div>
 
-        <button class="btn btn-dark" type="submit">Lascia recensione</button>
+        <button class="btn btn-primary" type="submit">Lascia recensione</button>
       </form>
 
+      <hr />
       <!-- vote the doctor -->
-      <div><strong>Vota questo dottore:</strong></div>
+      <h5>Vota questo dottore:</h5>
 
-      <form action="" method="POST" @submit.prevent="sendVote" class="mb-5">
+      <form
+        action=""
+        method="POST"
+        @submit.prevent="sendVote"
+        class="mb-5 __main-color"
+      >
         <div>
           <label for="voter" class="col-md-4 col-form-label text-md-right"
             >Nome</label
@@ -458,22 +481,26 @@ export default {
         </div>
 
         <div>
-          <label for="vote" class="col-md-4 col-form-label text-md-right"
+          <label
+            for="vote"
+            class="col-md-4 col-form-label text-md-right __main-color"
             >Voto *</label
           >
 
           <div class="mb-3">
             <select
-              class="form-select"
+              class="form-select __main-color"
               name="vote"
               id="vote"
               v-model="formVote.vote"
               required
             >
-              <option value="" disabled selected>
+              <option value="" class="__main-color" disabled selected>
                 Scegli un voto da assegnare al dottore
               </option>
-              <option v-for="number in 5" :value="number">{{ number }}</option>
+              <option v-for="number in 5" :value="number" class="__main-color">
+                {{ number }}
+              </option>
             </select>
           </div>
         </div>
@@ -483,27 +510,32 @@ export default {
           {{ errorVote }}
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3 __main-color">
           I campi contrassegnati con un asterisco sono obbligatori
         </div>
 
-        <button class="btn btn-dark" type="submit">Vota</button>
+        <button class="btn btn-primary" type="submit">Vota</button>
       </form>
 
+      <hr />
       <!-- reviews -->
       <div>
-        <div><strong>Recensioni:</strong></div>
-        <div v-if="doctor.reviews.length > 0">
+        <h5>Recensioni:</h5>
+        <div v-if="doctor.reviews.length > 0" class="__main-color">
           <div>
             <ul>
               <li v-for="rev in doctor.reviews">
-                <span>{{ rev.name }}</span> <br />
-                <p>{{ rev.description }}</p>
+                <label for="__reviewer-name"
+                  ><strong>Recensore: </strong>
+                </label>
+                <div id="__reviewer-name">{{ rev.name }}</div>
+                <label for="__review-text"><strong>Testo: </strong></label>
+                <p id="__review-text">{{ rev.description }}</p>
               </li>
             </ul>
           </div>
         </div>
-        <div v-else>
+        <div v-else class="__main-color">
           <i>Non ci sono ancora recensioni per questo medico.</i>
         </div>
       </div>
@@ -511,11 +543,25 @@ export default {
 
     <!-- the single doctor is not found -->
     <div v-else>
-      <div class="alert alert-danger text-center" role="alert">
+      <div class="alert alert-danger text-center __main-color" role="alert">
         Non è stato trovato nessun dottore
       </div>
     </div>
   </div>
 </template>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+h1,
+h5,
+.__main-color {
+  color: #263c64;
+}
+
+hr {
+  border: none; /* Remove the default border */
+  border-top: 3px solid #0c192f; /* Set the thickness and color of the top border */
+}
+label {
+  color: #263c64;
+}
+</style>
