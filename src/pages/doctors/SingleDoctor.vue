@@ -226,6 +226,10 @@ export default {
           }
         });
     },
+    thumbnailError(event) {
+      event.target.src =
+        "http://127.0.0.1:8000/storage/profile_pic_folder/anonimo.jpg";
+    },
   },
 };
 </script>
@@ -248,7 +252,12 @@ export default {
 
       <hr />
 
-      <img :src="thumbnail" style="width: 250px" alt="doctor profile pic" />
+      <img
+        :src="thumbnail"
+        style="width: 250px"
+        alt="doctor profile pic"
+        @error="thumbnailError"
+      />
 
       <div>
         <label for="__mainspec"
