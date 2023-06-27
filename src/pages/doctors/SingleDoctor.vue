@@ -43,6 +43,9 @@ export default {
       // loading page + doctor found variables
       isLoading: true,
       doctorFound: false,
+
+      // toggle reviews
+      showMenu: false,
     };
   },
 
@@ -72,6 +75,9 @@ export default {
   },
 
   methods: {
+    toggleMenu() {
+      this.showMenu = !this.showMenu;
+    },
     getDoctor() {
       axios
         .get("http://127.0.0.1:8000/api/users/" + this.doctorSlug)
@@ -521,8 +527,14 @@ export default {
       <!-- reviews -->
       <div>
         <h5>Recensioni:</h5>
+
         <div v-if="doctor.reviews.length > 0" class="__main-color">
-          <div>
+          <button class="btn btn-info" @click="toggleMenu">
+            {{
+              showMenu == false ? "Mostra recensioni" : "Nascondi Recensioni"
+            }}
+          </button>
+          <div v-if="showMenu">
             <ul>
               <li v-for="rev in doctor.reviews">
                 <label for="__reviewer-name"
