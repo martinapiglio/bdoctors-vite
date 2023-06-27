@@ -12,8 +12,10 @@ export default {
   computed: {
     thumbnail() {
       if (this.doctor.detail.profile_pic == null) {
+        console.log(this.doctor);
         return "http://127.0.0.1:8000/storage/profile_pic_folder/anonimo.jpg";
       } else {
+        console.log(this.doctor);
         return (
           "http://127.0.0.1:8000/storage/" + this.doctor.detail.profile_pic
         );
@@ -40,13 +42,22 @@ export default {
     roundToTwoDecimalPlaces(number) {
       return Math.round(number * 10) / 10;
     },
+    thumbnailError(event) {
+      event.target.src =
+        "http://127.0.0.1:8000/storage/profile_pic_folder/anonimo.jpg";
+    },
   },
 };
 </script>
 
 <template>
   <div class="card __card">
-    <img class="card-img-top" :src="thumbnail" alt="Card image cap" />
+    <img
+      class="card-img-top"
+      :src="thumbnail"
+      @error="thumbnailError"
+      alt="Card image cap"
+    />
     <div class="card-body">
       <h5 class="card-title">{{ doctor.name }} {{ doctor.surname }}</h5>
 
