@@ -12,14 +12,22 @@ export default {
   computed: {
     thumbnail() {
       if (this.doctor.detail.profile_pic == null) {
-        console.log(this.doctor);
+        console.log(this.doctor.votes);
         return "http://127.0.0.1:8000/storage/profile_pic_folder/anonimo.jpg";
       } else {
-        console.log(this.doctor);
         return (
           "http://127.0.0.1:8000/storage/" + this.doctor.detail.profile_pic
         );
       }
+    },
+    ratingRounded() {
+      console.log(this.doctor.votes);
+      let rating = this.getAverageVote();
+      return Math.floor(rating);
+    },
+    averageVote() {
+      let myAverageVote = this.getAverageVote();
+      return myAverageVote;
     },
   },
 
@@ -78,7 +86,34 @@ export default {
         </li>
       </ul>
 
-      <div><strong>Voto medio: </strong>{{ getAverageVote() }} / 5</div>
+      <div class="__card-rate mb-2">
+        <div><strong>Voto medio: </strong>{{ getAverageVote() }} / 5</div>
+        <div class="d-flex gap-1">
+          <span
+            ><i
+              v-for="rate in ratingRounded"
+              class="__star fa-solid fa-star"
+            ></i>
+            <i
+              v-if="averageVote - ratingRounded > 0.3"
+              class="__star fa-solid fa-star-half-stroke"
+            ></i>
+            <span v-if="averageVote - ratingRounded > 0.3">
+              <i
+                v-for="rate in 4 - ratingRounded"
+                class="__star fa-regular fa-star"
+              ></i>
+            </span>
+            <span v-else>
+              <i
+                v-for="rate in 5 - ratingRounded"
+                class="__star fa-regular fa-star"
+              ></i>
+            </span>
+          </span>
+          <!-- <span v-else>No rating available</span> -->
+        </div>
+      </div>
 
       <div>
         <strong>Numero di recensioni</strong>: {{ doctor.reviews.length }}
@@ -109,6 +144,9 @@ export default {
     width: 100%;
     height: 100%;
     border-bottom: 2px solid #263c64;
+  }
+  .__star {
+    color: gold;
   }
 }
 </style>
