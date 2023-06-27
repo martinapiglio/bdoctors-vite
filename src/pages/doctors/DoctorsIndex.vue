@@ -210,11 +210,9 @@ export default {
       <h4 class="text-center mt-5 section-title">Medici in evidenza</h4>
       <div
         v-if="sponsoredPresent"
-        class="d-flex justify-content-center flex-wrap gap-3 py-5"
+        class="__cards-container d-flex justify-content-center flex-wrap py-5"
       >
-        <div v-for="user in sponsoredUsers">
-          <DoctorCard :doctor="user"></DoctorCard>
-        </div>
+        <DoctorCard v-for="user in sponsoredUsers" :doctor="user"></DoctorCard>
       </div>
       <div v-else>
         <span>Non ci sono medici in evidenza</span>
@@ -224,11 +222,12 @@ export default {
       <h4 class="text-center mt-5 section-title">Tutti gli altri medici</h4>
       <div
         v-if="nonSponsoredPresent"
-        class="d-flex justify-content-center flex-wrap gap-3 py-5"
+        class="__cards-container d-flex justify-content-center flex-wrap py-5"
       >
-        <div v-for="user in nonSponsoredUsers">
-          <DoctorCard :doctor="user"></DoctorCard>
-        </div>
+        <DoctorCard
+          v-for="user in nonSponsoredUsers"
+          :doctor="user"
+        ></DoctorCard>
       </div>
       <div v-else>
         <span>Non ci sono altri medici</span>
@@ -271,5 +270,10 @@ export default {
 .section-title {
   font-size: 32px;
   color: $green;
+}
+
+.__cards-container {
+  gap: 20px;
+  align-items: stretch;
 }
 </style>

@@ -134,15 +134,15 @@ export default {
 
 <style lang="scss" scoped>
 .__card {
-  min-width: 300px;
-  width: calc(100% / 3 * 1 - (10px / 3 * 2));
+  min-width: 240px;
+  width: calc(100% / 3 * 1 - (20px / 3 * 2));
   background-color: #f7f9fb;
   color: #263c64;
   border: 2px solid #263c64;
   img {
     object-fit: cover;
     width: 100%;
-    height: 100%;
+    height: 270px;
     border-bottom: 2px solid #263c64;
   }
   .__star {

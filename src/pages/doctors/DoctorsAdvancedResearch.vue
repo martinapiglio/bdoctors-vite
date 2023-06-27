@@ -306,11 +306,12 @@ export default {
 
         <div
           v-if="sponsoredPresent"
-          class="d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
+          class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
         >
-          <div v-for="user in sponsoredUsers">
-            <DoctorCard :doctor="user"></DoctorCard>
-          </div>
+          <DoctorCard
+            v-for="user in sponsoredUsers"
+            :doctor="user"
+          ></DoctorCard>
         </div>
         <div v-else class="text-center pb-5 pt-4">
           <span>Non ci sono medici in evidenza</span>
@@ -321,11 +322,12 @@ export default {
 
         <div
           v-if="nonSponsoredPresent"
-          class="d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
+          class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
         >
-          <div v-for="user in nonSponsoredUsers">
-            <DoctorCard :doctor="user"></DoctorCard>
-          </div>
+          <DoctorCard
+            v-for="user in nonSponsoredUsers"
+            :doctor="user"
+          ></DoctorCard>
         </div>
         <div v-else class="text-center pb-5 pt-4">
           <span>Non ci sono altri medici</span>
@@ -373,8 +375,12 @@ export default {
     }
   }
 }
-
 .alert-section {
   height: calc(100% - $header-height);
+}
+
+.__cards-container {
+  gap: 20px;
+  align-items: stretch;
 }
 </style>
