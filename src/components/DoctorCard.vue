@@ -23,7 +23,7 @@ export default {
     ratingRounded() {
       console.log(this.doctor.votes);
       let rating = this.getAverageVote();
-      return Math.floor(rating);
+      return Math.round(rating);
     },
     averageVote() {
       let myAverageVote = this.getAverageVote();
