@@ -1,11 +1,21 @@
 <script>
 import axios from "axios";
+import SuccessAlert from "../../components/SuccessAlert.vue";
 export default {
   name: "SingleDoctor",
   data() {
     return {
       doctor: {},
       doctorSlug: "",
+
+      // Message Alert
+      showMessageAlert: false,
+
+      // Review Alert
+      showReviewAlert: false,
+
+      //Vote Alert
+      showVoteAlert: false,
 
       // data from message form
       formData: {
@@ -48,6 +58,9 @@ export default {
       showMenu: false,
     };
   },
+  components: {
+    SuccessAlert,
+  },
 
   computed: {
     thumbnail() {
@@ -78,6 +91,7 @@ export default {
     toggleMenu() {
       this.showMenu = !this.showMenu;
     },
+
     getDoctor() {
       axios
         .get("http://127.0.0.1:8000/api/users/" + this.doctorSlug)
@@ -110,15 +124,20 @@ export default {
       axios
         .post("http://127.0.0.1:8000/api/messages", this.formData)
         .then((response) => {
-          location.reload();
-
-          this.formData.userId = "";
+          //this.formData.userId = "";
           this.formData.name = "";
           this.formData.email = "";
           this.formData.subject = "";
           this.formData.message = "";
 
           this.errorMessageFound = false;
+
+          // Show the success alert
+          this.showMessageAlert = true;
+          //Hide the alert after 3 seconds
+          setTimeout(() => {
+            this.showMessageAlert = false;
+          }, 5000);
         })
         .catch((error) => {
           if (error.response) {
@@ -153,13 +172,19 @@ export default {
           description: this.formReview.description,
         })
         .then((response) => {
-          location.reload();
-
-          this.formReview.userId = "";
+          //location.reload();
+          //this.formReview.userId = "";
           this.formReview.name = "";
           this.formReview.description = "";
 
           this.errorReviewFound = false;
+
+          // Show the success alert
+          this.showReviewAlert = true;
+          //Hide the alert after 3 seconds
+          setTimeout(() => {
+            this.showReviewAlert = false;
+          }, 5000);
         })
         .catch((error) => {
           if (error.response) {
@@ -194,13 +219,20 @@ export default {
           vote: this.formVote.vote,
         })
         .then((response) => {
-          location.reload();
+          //location.reload();
 
-          this.formVote.userId = "";
+          //this.formVote.userId = "";
           this.formVote.voter = "";
           this.formVote.vote = "";
 
           this.errorVoteFound = false;
+
+          // Show the success alert
+          this.showVoteAlert = true;
+          //Hide the alert after 3 seconds
+          setTimeout(() => {
+            this.showVoteAlert = false;
+          }, 5000);
         })
         .catch((error) => {
           if (error.response) {
@@ -315,7 +347,7 @@ export default {
       <!-- send a message -->
       <h5>Invia un messaggio a questo dottore:</h5>
 
-      <form action="" method="POST" @submit.prevent="sendMessage" class="mb-5">
+      <form action="" method="POST" @submit.prevent="sendMessage" class="mb-2">
         <div>
           <label for="name" class="col-md-4 col-form-label text-md-right"
             >Nome *</label
@@ -408,13 +440,18 @@ export default {
 
         <button class="btn btn-primary" type="submit">Invia messaggio</button>
       </form>
+      <!-- <div v-if="showAlert" class="alert alert-success" role="alert">
+        Operazione conclusa con successo!
+      </div> -->
+
+      <success-alert v-if="showMessageAlert"></success-alert>
 
       <hr />
 
       <!-- send a review -->
       <h5>Invia un recensione a questo dottore:</h5>
 
-      <form action="" method="POST" @submit.prevent="sendReview" class="mb-5">
+      <form action="" method="POST" @submit.prevent="sendReview" class="mb-2">
         <div>
           <label for="name" class="col-md-4 col-form-label text-md-right"
             >Nome</label
@@ -464,6 +501,7 @@ export default {
 
         <button class="btn btn-primary" type="submit">Lascia recensione</button>
       </form>
+      <success-alert v-if="showReviewAlert"></success-alert>
 
       <hr />
       <!-- vote the doctor -->
@@ -473,7 +511,7 @@ export default {
         action=""
         method="POST"
         @submit.prevent="sendVote"
-        class="mb-5 __main-color"
+        class="mb-2 __main-color"
       >
         <div>
           <label for="voter" class="col-md-4 col-form-label text-md-right"
@@ -531,6 +569,7 @@ export default {
 
         <button class="btn btn-primary" type="submit">Vota</button>
       </form>
+      <success-alert v-if="showVoteAlert"></success-alert>
 
       <hr />
       <!-- reviews -->
