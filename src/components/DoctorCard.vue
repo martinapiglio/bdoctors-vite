@@ -43,18 +43,22 @@ export default {
 
   methods: {
     getAverageVote() {
-      let sum = 0;
-      let votesArray = this.doctor.votes;
+      if (this.doctor.votes) {
+        let sum = 0;
+        let votesArray = this.doctor.votes;
 
-      for (let i = 0; i < votesArray.length; i++) {
-        sum += votesArray[i].vote;
+        for (let i = 0; i < votesArray.length; i++) {
+          sum += votesArray[i].vote;
+        }
+
+        let averageVote = sum / votesArray.length;
+
+        let roundedAverageVote = this.roundToTwoDecimalPlaces(averageVote);
+
+        return roundedAverageVote;
+      } else {
+        return null;
       }
-
-      let averageVote = sum / votesArray.length;
-
-      let roundedAverageVote = this.roundToTwoDecimalPlaces(averageVote);
-
-      return roundedAverageVote;
     },
 
     roundToTwoDecimalPlaces(number) {
@@ -96,7 +100,7 @@ export default {
         </li>
       </ul>
 
-      <div class="__card-rate mb-2">
+      <div v-if="averageVote" class="__card-rate mb-2">
         <div><strong>Voto medio: </strong>{{ getAverageVote() }} / 5</div>
         <div class="d-flex gap-1">
           <span>
@@ -109,6 +113,9 @@ export default {
           </span>
           <!-- <span v-else>No rating available</span> -->
         </div>
+      </div>
+      <div v-else>
+        <strong>Voto medio: </strong>questo dottore non ha ancora alcun voto
       </div>
 
       <div>
