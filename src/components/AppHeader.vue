@@ -96,6 +96,7 @@ export default {
     height: 100%;
     .immagine {
       height: 100%;
+      min-width: 165px;
     }
   }
   #are-u-doctor {
