@@ -135,7 +135,7 @@ export default {
 <style lang="scss" scoped>
 .__card {
   min-width: 240px;
-  width: calc(100% / 3 * 1 - (20px / 3 * 2));
+  width: calc(100% / 4 * 1 - (20px / 4 * 3));
   background-color: #f7f9fb;
   color: #263c64;
   border: 2px solid #263c64;

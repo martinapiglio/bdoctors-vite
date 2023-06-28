@@ -137,7 +137,7 @@ export default {
           //Hide the alert after 3 seconds
           setTimeout(() => {
             this.showMessageAlert = false;
-          }, 5000);
+          }, 4000);
         })
         .catch((error) => {
           if (error.response) {
@@ -184,7 +184,7 @@ export default {
           //Hide the alert after 3 seconds
           setTimeout(() => {
             this.showReviewAlert = false;
-          }, 5000);
+          }, 4000);
         })
         .catch((error) => {
           if (error.response) {
@@ -232,7 +232,7 @@ export default {
           //Hide the alert after 3 seconds
           setTimeout(() => {
             this.showVoteAlert = false;
-          }, 5000);
+          }, 4000);
         })
         .catch((error) => {
           if (error.response) {
