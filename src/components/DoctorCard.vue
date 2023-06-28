@@ -138,7 +138,8 @@ export default {
   img {
     object-fit: cover;
     width: 100%;
-    height: 270px;
+    height: 320px;
+    object-position: top;
     border-bottom: 2px solid #263c64;
   }
   .__star {
