@@ -3,7 +3,9 @@ export default {
   name: "AppHeader",
 
   data() {
-    return {};
+    return {
+      visible: false,
+    };
   },
 };
 </script>
@@ -46,6 +48,7 @@ export default {
       />
     </div>
     <button
+      @click="visible = !visible"
       class="navbar-toggler"
       type="button"
       data-bs-toggle="collapse"
@@ -57,7 +60,11 @@ export default {
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div
+      class="navbar-collapse mb-3"
+      :class="!visible ? 'collapse' : ''"
+      id="navbarSupportedContent"
+    >
       <!-- Left Side Of Navbar -->
       <ul class="navbar-nav me-auto">
         <li class="nav-item links-container">
@@ -91,9 +98,9 @@ export default {
   position: fixed;
   z-index: 2;
   width: 100%;
-  height: $header-height;
+  min-height: $header-height;
   .logo-cont {
-    height: 100%;
+    height: $header-height;
     .immagine {
       height: 100%;
     }
