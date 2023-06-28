@@ -9,12 +9,12 @@ export default {
 </script>
 
 <template>
-  <nav
-    class="navbar navbar-expand-lg navbar-light bg-light d-flex justify-content-between"
+  <!-- <nav
+    class="navbar navbar-expand-lg navbar-light bg-white shadow-sm d-flex justify-content-between"
   >
     <div class="d-flex align-items-center" id="logo-home-container">
       <img
-        class="img-fluid px-4"
+        class="img-fluid p-3"
         id="logo-img"
         src="/img/BDOCTORS-LogoB.jpg"
         alt="bdoctors-logo-img"
@@ -26,7 +26,7 @@ export default {
     </div>
 
     <div class="nav-item d-flex align-items-center gap-3 px-4">
-      <span id="are-u-doctor"> Sei un dottore? </span>
+      <span id="are-u-doctor" class="navbar-nav"> Sei un dottore? </span>
       <div class="links-container">
         <a class="links" href="http://127.0.0.1:8000/register"> Registrati </a>
       </div>
@@ -34,19 +34,67 @@ export default {
         <a class="links" href="http://127.0.0.1:8000/login"> Fai il login </a>
       </div>
     </div>
+  </nav> -->
+  <nav
+    class="navbar navbar-expand-lg navbar-light bg-white shadow-sm custom-nav"
+  >
+    <div class="logo-cont p-3">
+      <img
+        class="img-fluid immagine"
+        src="/img/BDOCTORS-LogoB.jpg"
+        alt="logone"
+      />
+    </div>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="{{ __('Toggle navigation') }}"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <!-- Left Side Of Navbar -->
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item links-container">
+          <a class="links" href="/">Home</a>
+        </li>
+      </ul>
+
+      <!-- Right Side Of Navbar -->
+      <ul class="navbar-nav ml-auto d-flex gap-3 align-items-center">
+        <li class="nav-item links-container">
+          <span id="are-u-doctor" class="nav-link"> Sei un dottore? </span>
+        </li>
+
+        <li class="nav-item links-container">
+          <a class="links" href="http://127.0.0.1:8000/register">Registrati</a>
+        </li>
+
+        <li class="nav-item links-container">
+          <a class="links" href="http://127.0.0.1:8000/login">Login</a>
+        </li>
+      </ul>
+    </div>
   </nav>
 </template>
 
 <style lang="scss" scoped>
 @use "./style/_variables.scss" as *;
-nav {
+
+.custom-nav {
+  padding: 0 5rem 0;
   position: fixed;
   z-index: 2;
   width: 100%;
   height: $header-height;
-  #logo-home-container {
+  .logo-cont {
     height: 100%;
-    #logo-img {
+    .immagine {
       height: 100%;
     }
   }
@@ -63,6 +111,7 @@ nav {
     transition: all 0.2s;
     .links {
       position: relative;
+      color: $blue;
       font-weight: bold;
       transition: all 0.2s;
       text-decoration: none;

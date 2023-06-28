@@ -29,5 +29,9 @@ export default {
 @use "./components/style/_variables.scss" as *;
 #outer-container {
   padding-top: $header-height;
+  min-width: 300px;
+  min-height: 300px;
+  max-width: 100%;
+  max-height: 100%;
 }
 </style>
