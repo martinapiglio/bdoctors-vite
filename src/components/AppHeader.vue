@@ -74,8 +74,8 @@ export default {
 
       <!-- Right Side Of Navbar -->
       <ul class="navbar-nav ml-auto d-flex gap-3 align-items-center">
-        <li class="nav-item links-container">
-          <span id="are-u-doctor" class="nav-link"> Sei un dottore? </span>
+        <li class="nav-item">
+          <span id="are-u-doctor"> Sei un dottore? </span>
         </li>
 
         <li class="nav-item links-container">
