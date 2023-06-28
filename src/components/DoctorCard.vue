@@ -95,10 +95,10 @@ export default {
               class="__star fa-solid fa-star"
             ></i>
             <i
-              v-if="averageVote - ratingRounded > 0.3"
+              v-if="averageVote - ratingRounded > 0.2"
               class="__star fa-solid fa-star-half-stroke"
             ></i>
-            <span v-if="averageVote - ratingRounded > 0.3">
+            <span v-if="averageVote - ratingRounded > 0.2">
               <i
                 v-for="rate in 4 - ratingRounded"
                 class="__star fa-regular fa-star"
