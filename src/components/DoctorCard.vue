@@ -68,6 +68,9 @@ export default {
       event.target.src =
         "http://127.0.0.1:8000/storage/profile_pic_folder/anonimo.jpg";
     },
+    truncateText(text, length) {
+      return text.length > length ? text.substring(0, length) + "..." : text;
+    },
   },
 };
 </script>
@@ -89,16 +92,18 @@ export default {
       </div>
       <div class="card-text">
         <label for="__descrizione"><strong>Descrizione:</strong></label>
-        <p id="__descrizione">{{ doctor.description }}</p>
+        <p id="__descrizione">{{ truncateText(doctor.description, 120) }}</p>
       </div>
 
-      <strong>Altre specializzazioni: </strong>
-      <!-- other specs -->
-      <ul>
-        <li v-for="spec in doctor.detail.specs">
-          {{ spec.title }}
-        </li>
-      </ul>
+      <div v-if="doctor.detail.specs">
+        <strong>Altre specializzazioni: </strong>
+        <!-- other specs -->
+        <ul>
+          <li v-for="spec in doctor.detail.specs">
+            {{ spec.title }}
+          </li>
+        </ul>
+      </div>
 
       <div v-if="averageVote" class="__card-rate mb-2">
         <div><strong>Voto medio: </strong>{{ getAverageVote() }} / 5</div>

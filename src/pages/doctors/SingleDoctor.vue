@@ -311,6 +311,14 @@ export default {
         </ul>
       </div>
 
+      <div>
+        <label for="__description"><strong>Descrizione </strong></label>
+
+        <p id="__description">
+          {{ doctor.description }}
+        </p>
+      </div>
+
       <div v-if="doctor.detail.curriculum" class="my-4">
         <a :href="curriculum" target="_blank" class="btn btn-primary"
           >Vedi il CV</a
