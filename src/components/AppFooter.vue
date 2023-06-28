@@ -16,7 +16,7 @@ export default {
 
 <template>
   <div
-    class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top"
+    class="d-flex flex-wrap justify-content-between align-items-center py-3 border-top footer-custom"
   >
     <div class="col-md-4 d-flex align-items-center footer-el">
       <a href="/" class="mb-3 me-2 mb-md-0 text-decoration-none lh-1">
@@ -47,14 +47,18 @@ export default {
 
 <style lang="scss" scoped>
 @use "./style/_variables.scss" as *;
-.footer-el {
-  span {
-    font-weight: bold;
-    color: $blue;
-  }
 
-  i {
-    color: $green;
+.footer-custom {
+  height: $footer-height;
+  .footer-el {
+    span {
+      font-weight: bold;
+      color: $blue;
+    }
+
+    i {
+      color: $green;
+    }
   }
 }
 </style>

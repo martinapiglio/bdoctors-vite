@@ -30,7 +30,7 @@ export default {
 #outer-container {
   padding-top: $header-height;
   min-width: 300px;
-  min-height: 300px;
+  min-height: calc(100vh - $footer-height);
   max-width: 100%;
   max-height: 100%;
 }

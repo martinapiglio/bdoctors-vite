@@ -231,7 +231,7 @@ export default {
   </div>
 
   <!-- when loading is finished -->
-  <div v-else>
+  <div v-else class="h-100">
     <section class="adv-research p-5 text-white">
       <h2>Ricerca avanzata</h2>
       <!-- link to homepage with all doctors -->
@@ -270,7 +270,9 @@ export default {
               @change="filteredByVotes"
             >
               <option value="">Tutti</option>
-              <option v-for="number in 5" :value="number">{{ number }}</option>
+              <option v-for="number in 5" :value="number">
+                {{ number }} {{ number != 5 ? "+" : "" }}
+              </option>
             </select>
           </form>
 
@@ -338,9 +340,9 @@ export default {
     <!-- there are no doctors in the selected spec -->
     <div
       v-else
-      class="d-flex justify-content-center align-items-center p-2 alert-section"
+      class="h-100 d-flex justify-content-center align-items-center p-2 alert-section"
     >
-      <div role="alert" class="alert alert-warning text-center">
+      <div role="alert" class="alert alert-warning text-center m-0 mt-4">
         <span
           >Non è stato trovato nessun dottore, riprova con un'altra
           categoria</span
