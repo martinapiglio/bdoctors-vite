@@ -2,7 +2,9 @@
 export default {
   name: "DoctorCard",
   data() {
-    return {};
+    return {
+      averageVote: this.getAverageVote(),
+    };
   },
 
   props: {
@@ -20,14 +22,22 @@ export default {
         );
       }
     },
-    ratingRounded() {
-      console.log(this.doctor.votes);
-      let rating = this.getAverageVote();
-      return Math.round(rating);
+    fullStars() {
+      const decimalPart = this.averageVote % 1;
+      if (decimalPart < 0.3) {
+        return Math.floor(this.averageVote);
+      } else if (decimalPart >= 0.8) {
+        return Math.ceil(this.averageVote);
+      } else {
+        return Math.floor(this.averageVote);
+      }
     },
-    averageVote() {
-      let myAverageVote = this.getAverageVote();
-      return myAverageVote;
+    hasHalfStar() {
+      const decimalPart = this.averageVote % 1;
+      return decimalPart >= 0.3 && decimalPart < 0.8;
+    },
+    emptyStars() {
+      return 5 - this.fullStars - (this.hasHalfStar ? 1 : 0);
     },
   },
 
@@ -89,27 +99,13 @@ export default {
       <div class="__card-rate mb-2">
         <div><strong>Voto medio: </strong>{{ getAverageVote() }} / 5</div>
         <div class="d-flex gap-1">
-          <span
-            ><i
-              v-for="rate in ratingRounded"
-              class="__star fa-solid fa-star"
-            ></i>
+          <span>
+            <i v-for="star in fullStars" class="__star fa-solid fa-star"></i>
             <i
-              v-if="averageVote - ratingRounded > 0.2"
+              v-if="hasHalfStar"
               class="__star fa-solid fa-star-half-stroke"
             ></i>
-            <span v-if="averageVote - ratingRounded > 0.2">
-              <i
-                v-for="rate in 4 - ratingRounded"
-                class="__star fa-regular fa-star"
-              ></i>
-            </span>
-            <span v-else>
-              <i
-                v-for="rate in 5 - ratingRounded"
-                class="__star fa-regular fa-star"
-              ></i>
-            </span>
+            <i v-for="star in emptyStars" class="__star fa-regular fa-star"></i>
           </span>
           <!-- <span v-else>No rating available</span> -->
         </div>
