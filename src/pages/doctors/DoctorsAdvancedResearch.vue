@@ -69,27 +69,37 @@ export default {
 
   methods: {
     getFilteredDocs() {
-      axios
-        .get("http://127.0.0.1:8000/api/users" + "?mainspec=" + this.spec)
-        .then((response) => {
-          this.specs = response.data.specs;
-          console.log(response.data.specs);
+      const baseUrl = "http://127.0.0.1:8000/api/users";
 
-          if (response.data.success) {
-            this.users = response.data.results;
+      const url =
+        baseUrl +
+        (this.spec === "Tutte"
+          ? ""
+          : "?mainspec=" +
+            (this.specVModel === "" ? this.spec : this.specVModel));
+      axios.get(url).then((response) => {
+        this.specs = response.data.specs;
+        console.log(response.data.specs);
+        console.log(
+          "http://127.0.0.1:8000/api/users" + "?mainspec=" + this.spec
+        );
 
-            this.doctorsFound = true;
-            this.isLoading = false;
-            this.getSponsoredUsers();
-            this.getNonSponsoredUsers();
-            setTimeout(() => {
-              this.scrollFunction("displayed");
-            }, 800);
-          } else {
-            this.doctorsFound = false;
-            this.isLoading = false;
-          }
-        });
+        if (response.data.success) {
+          this.users = response.data.results;
+          console.log(response.data.results);
+
+          this.doctorsFound = true;
+          this.isLoading = false;
+          this.getSponsoredUsers();
+          this.getNonSponsoredUsers();
+          setTimeout(() => {
+            this.scrollFunction("displayed");
+          }, 800);
+        } else {
+          this.doctorsFound = false;
+          this.isLoading = false;
+        }
+      });
     },
     scrollFunction(id) {
       let e = document.getElementById(id);
@@ -255,15 +265,15 @@ export default {
             this.doctorsFound = false;
             this.isLoading = false;
           }
-          const str = this.specVModel;
-          const slug = str
-            .toLowerCase()
-            .replace(/\s+/g, "-")
-            .replace(/[^a-z0-9-]/g, "");
+          // const str = this.specVModel;
+          // const slug = str
+          //   .toLowerCase()
+          //   .replace(/\s+/g, "-")
+          //   .replace(/[^a-z0-9-]/g, "");
 
           this.$router.push({
             name: "doctorsSearch",
-            params: { spec: slug },
+            params: { spec: this.specVModel },
             replace: true,
           });
         });
