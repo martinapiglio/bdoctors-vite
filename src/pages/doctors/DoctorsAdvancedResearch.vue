@@ -79,14 +79,11 @@ export default {
             (this.specVModel === "" ? this.spec : this.specVModel));
       axios.get(url).then((response) => {
         this.specs = response.data.specs;
-        console.log(response.data.specs);
-        console.log(
-          "http://127.0.0.1:8000/api/users" + "?mainspec=" + this.spec
-        );
+        //console.log(response.data.specs);
 
         if (response.data.success) {
           this.users = response.data.results;
-          console.log(response.data.results);
+          //console.log(response.data.results);
 
           this.doctorsFound = true;
           this.isLoading = false;
@@ -103,7 +100,7 @@ export default {
     },
     scrollFunction(id) {
       let e = document.getElementById(id);
-      console.log(e);
+      //console.log(e);
       e.scrollIntoView({
         block: "start",
         behavior: "smooth",
