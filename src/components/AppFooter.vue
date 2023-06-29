@@ -86,9 +86,13 @@ export default {
     cursor: pointer;
     border-radius: 20px;
     width: 100px;
+    border: 1px solid $blue;
 
     .__arrow {
       display: none;
+    }
+    .__go-up {
+      color: $blue;
     }
   }
   .__slider:hover {
