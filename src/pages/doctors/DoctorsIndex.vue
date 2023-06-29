@@ -198,7 +198,7 @@ export default {
         >
           <option value="">Tutte</option>
           <option v-for="spec in specs" :value="spec.title">
-            {{ spec.title }}
+            <span class="__option">{{ spec.title }}</span>
           </option>
         </select>
       </form>
@@ -262,7 +262,8 @@ export default {
     border-radius: 15px;
     background-color: $darker-blue;
 
-    select {
+    select,
+    .__option {
       cursor: pointer;
     }
   }

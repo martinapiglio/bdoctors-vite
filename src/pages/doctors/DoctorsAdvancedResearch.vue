@@ -82,41 +82,59 @@ export default {
             this.isLoading = false;
             this.getSponsoredUsers();
             this.getNonSponsoredUsers();
+            setTimeout(() => {
+              this.scrollFunction("displayed");
+            }, 800);
           } else {
             this.doctorsFound = false;
             this.isLoading = false;
           }
         });
     },
+    scrollFunction(id) {
+      let e = document.getElementById(id);
+      console.log(e);
+      e.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+        inline: "start",
+      });
+    },
 
     filteredByVotes() {
-      axios
-        .get(
-          "http://127.0.0.1:8000/api/users" +
-            "?mainspec=" +
-            (this.specVModel == "" ? this.spec : this.specVModel) +
+      const baseUrl = "http://127.0.0.1:8000/api/users";
+
+      const url =
+        baseUrl +
+        (this.specVModel === "Tutte"
+          ? "?vote=" + this.userVote
+          : "?mainspec=" +
+            (this.specVModel === "" ? this.spec : this.specVModel) +
             "&vote=" +
-            this.userVote
-        )
-        .then((response) => {
-          if (response.data.success) {
-            this.users = response.data.results;
-            // console.log({ ...Object(this.users) });
-            this.specs = response.data.specs;
-            this.reviews = response.data.reviews;
-            this.votes = response.data.votes;
-            this.order = "";
-            this.getSponsoredUsers();
-            this.getNonSponsoredUsers();
+            this.userVote);
 
-            // console.log(this.users);
+      // Use the `url` variable as needed
 
-            this.doctorsFound = true;
-          } else {
-            this.doctorsFound = false;
-            this.isLoading = false;
-          }
-        });
+      axios.get(url).then((response) => {
+        if (response.data.success) {
+          this.users = response.data.results;
+          // console.log({ ...Object(this.users) });
+          this.specs = response.data.specs;
+          this.reviews = response.data.reviews;
+          this.votes = response.data.votes;
+          this.order = "";
+          this.getSponsoredUsers();
+          this.getNonSponsoredUsers();
+
+          // console.log(this.users);
+
+          this.doctorsFound = true;
+          this.scrollFunction("displayed");
+        } else {
+          this.doctorsFound = false;
+          this.isLoading = false;
+        }
+      });
     },
 
     sortedUsers(array) {
@@ -134,6 +152,7 @@ export default {
     sortAll() {
       this.sponsoredUsers = this.sortedUsers(this.sponsoredUsers);
       this.otherArray = this.sortedUsers(this.nonSponsoredUsers);
+      this.scrollFunction("displayed");
     },
 
     getSponsoredUsers() {
@@ -184,9 +203,39 @@ export default {
     },
 
     getFilteredDocsInPage() {
-      axios
-        .get("http://127.0.0.1:8000/api/users" + "?mainspec=" + this.specVModel)
-        .then((response) => {
+      if (this.specVModel != "Tutte") {
+        axios
+          .get(
+            "http://127.0.0.1:8000/api/users" + "?mainspec=" + this.specVModel
+          )
+          .then((response) => {
+            if (response.data.success) {
+              this.users = response.data.results;
+              this.specs = response.data.specs;
+              this.reviews = response.data.reviews;
+              this.votes = response.data.votes;
+
+              // console.log(this.users);
+
+              this.doctorsFound = true;
+              this.isLoading = false;
+              this.getSponsoredUsers();
+              this.getNonSponsoredUsers();
+              this.scrollFunction("displayed");
+
+              this.userVote = "";
+            } else {
+              this.doctorsFound = false;
+              this.isLoading = false;
+            }
+            this.$router.push({
+              name: "doctorsSearch",
+              params: { spec: this.specVModel },
+              replace: true,
+            });
+          });
+      } else {
+        axios.get("http://127.0.0.1:8000/api/users").then((response) => {
           if (response.data.success) {
             this.users = response.data.results;
             this.specs = response.data.specs;
@@ -199,18 +248,26 @@ export default {
             this.isLoading = false;
             this.getSponsoredUsers();
             this.getNonSponsoredUsers();
+            this.scrollFunction("displayed");
 
             this.userVote = "";
           } else {
             this.doctorsFound = false;
             this.isLoading = false;
           }
+          const str = this.specVModel;
+          const slug = str
+            .toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9-]/g, "");
+
           this.$router.push({
             name: "doctorsSearch",
-            params: { spec: this.specVModel },
+            params: { spec: slug },
             replace: true,
           });
         });
+      }
     },
   },
 };
@@ -251,7 +308,7 @@ export default {
             v-model="specVModel"
             @change="getFilteredDocsInPage"
           >
-            <option value="">Tutte</option>
+            <option value="Tutte">Tutte</option>
             <option v-for="spec in specs" :value="spec.title">
               {{ spec.title }}
             </option>
@@ -296,59 +353,69 @@ export default {
             </form>
           </div>
         </div>
+        <section id="displayed"></section>
       </div>
     </section>
 
-    <!-- doctors are found -->
-    <div v-if="doctorsFound">
-      <!-- doctors cards visualisation -->
-      <div class="container">
-        <!-- sponsored doctors -->
-        <h4 class="text-center mt-5 section-title">Medici in evidenza</h4>
+    <section class="mt-5">
+      <div class="container text-center section-title p-2">
+        <h1>
+          <strong>{{
+            this.specVModel == "" ? this.spec : this.specVModel
+          }}</strong>
+        </h1>
+      </div>
+      <!-- doctors are found -->
+      <div v-if="doctorsFound">
+        <!-- doctors cards visualisation -->
+        <div class="container">
+          <!-- sponsored doctors -->
+          <h4 class="text-center section-title">Medici in evidenza</h4>
 
-        <div
-          v-if="sponsoredPresent"
-          class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
-        >
-          <DoctorCard
-            v-for="user in sponsoredUsers"
-            :doctor="user"
-          ></DoctorCard>
-        </div>
-        <div v-else class="text-center pb-5 pt-4">
-          <span>Non ci sono medici in evidenza</span>
-        </div>
+          <div
+            v-if="sponsoredPresent"
+            class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
+          >
+            <DoctorCard
+              v-for="user in sponsoredUsers"
+              :doctor="user"
+            ></DoctorCard>
+          </div>
+          <div v-else class="text-center pb-5 pt-4">
+            <span>Non ci sono medici in evidenza</span>
+          </div>
 
-        <!-- non-sponsored doctors -->
-        <h4 class="text-center mt-5 section-title">Tutti gli altri medici</h4>
+          <!-- non-sponsored doctors -->
+          <h4 class="text-center mt-5 section-title">Tutti gli altri medici</h4>
 
-        <div
-          v-if="nonSponsoredPresent"
-          class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
-        >
-          <DoctorCard
-            v-for="user in nonSponsoredUsers"
-            :doctor="user"
-          ></DoctorCard>
-        </div>
-        <div v-else class="text-center pb-5 pt-4">
-          <span>Non ci sono altri medici</span>
+          <div
+            v-if="nonSponsoredPresent"
+            class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
+          >
+            <DoctorCard
+              v-for="user in nonSponsoredUsers"
+              :doctor="user"
+            ></DoctorCard>
+          </div>
+          <div v-else class="text-center pb-5 pt-4">
+            <span>Non ci sono altri medici</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- there are no doctors in the selected spec -->
-    <div
-      v-else
-      class="h-100 d-flex justify-content-center align-items-center p-2 alert-section"
-    >
-      <div role="alert" class="alert alert-warning text-center m-0 mt-4">
-        <span
-          >Non è stato trovato nessun dottore, riprova con un'altra
-          categoria</span
-        >
+      <!-- there are no doctors in the selected spec -->
+      <div
+        v-else
+        class="h-100 d-flex justify-content-center align-items-center p-2 alert-section"
+      >
+        <div role="alert" class="alert alert-warning text-center m-0 mt-4">
+          <span
+            >Non è stato trovato nessun dottore, riprova con un'altra
+            categoria</span
+          >
+        </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
