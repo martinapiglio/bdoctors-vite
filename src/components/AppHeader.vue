@@ -41,11 +41,12 @@ export default {
     class="navbar navbar-expand-lg navbar-light bg-white shadow-sm custom-nav"
   >
     <div class="logo-cont p-3">
-      <img
-        class="img-fluid immagine"
-        src="/img/BDOCTORS-LogoB.jpg"
-        alt="logone"
-      />
+      <a href="/"
+        ><img
+          class="img-fluid immagine"
+          src="/img/BDOCTORS-LogoB.jpg"
+          alt="logone"
+      /></a>
     </div>
     <button
       @click="visible = !visible"

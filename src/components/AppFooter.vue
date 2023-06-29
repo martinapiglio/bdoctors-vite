@@ -54,8 +54,10 @@ export default {
       class="__slider text-white py-2 px-3 d-flex flex-column align-items-center"
       @click="scrollToTop"
     >
-      <span class="__arrow"><i class="fa-solid fa-chevron-up"></i></span>
-      <span class="__go-up">Torna su</span>
+      <span class="__arrow"
+        ><strong><i class="fa-solid fa-chevron-up"></i></strong
+      ></span>
+      <span class="__go-up"><strong>Torna su</strong></span>
     </div>
   </div>
 </template>
