@@ -82,11 +82,23 @@ export default {
             this.isLoading = false;
             this.getSponsoredUsers();
             this.getNonSponsoredUsers();
+            setTimeout(() => {
+              this.scrollFunction("displayed");
+            }, 200);
           } else {
             this.doctorsFound = false;
             this.isLoading = false;
           }
         });
+    },
+    scrollFunction(id) {
+      let e = document.getElementById(id);
+      console.log(e);
+      e.scrollIntoView({
+        block: "start",
+        behavior: "smooth",
+        inline: "start",
+      });
     },
 
     filteredByVotes() {
@@ -112,6 +124,7 @@ export default {
             // console.log(this.users);
 
             this.doctorsFound = true;
+            this.scrollFunction("displayed");
           } else {
             this.doctorsFound = false;
             this.isLoading = false;
@@ -134,6 +147,7 @@ export default {
     sortAll() {
       this.sponsoredUsers = this.sortedUsers(this.sponsoredUsers);
       this.otherArray = this.sortedUsers(this.nonSponsoredUsers);
+      this.scrollFunction("displayed");
     },
 
     getSponsoredUsers() {
@@ -199,6 +213,7 @@ export default {
             this.isLoading = false;
             this.getSponsoredUsers();
             this.getNonSponsoredUsers();
+            this.scrollFunction("displayed");
 
             this.userVote = "";
           } else {
@@ -296,59 +311,69 @@ export default {
             </form>
           </div>
         </div>
+        <section id="displayed"></section>
       </div>
     </section>
 
-    <!-- doctors are found -->
-    <div v-if="doctorsFound">
-      <!-- doctors cards visualisation -->
-      <div class="container">
-        <!-- sponsored doctors -->
-        <h4 class="text-center mt-5 section-title">Medici in evidenza</h4>
+    <section class="mt-5">
+      <div class="container text-center section-title p-2">
+        <h1>
+          <strong>{{
+            this.specVModel == "" ? this.spec : this.specVModel
+          }}</strong>
+        </h1>
+      </div>
+      <!-- doctors are found -->
+      <div v-if="doctorsFound">
+        <!-- doctors cards visualisation -->
+        <div class="container">
+          <!-- sponsored doctors -->
+          <h4 class="text-center section-title">Medici in evidenza</h4>
 
-        <div
-          v-if="sponsoredPresent"
-          class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
-        >
-          <DoctorCard
-            v-for="user in sponsoredUsers"
-            :doctor="user"
-          ></DoctorCard>
-        </div>
-        <div v-else class="text-center pb-5 pt-4">
-          <span>Non ci sono medici in evidenza</span>
-        </div>
+          <div
+            v-if="sponsoredPresent"
+            class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
+          >
+            <DoctorCard
+              v-for="user in sponsoredUsers"
+              :doctor="user"
+            ></DoctorCard>
+          </div>
+          <div v-else class="text-center pb-5 pt-4">
+            <span>Non ci sono medici in evidenza</span>
+          </div>
 
-        <!-- non-sponsored doctors -->
-        <h4 class="text-center mt-5 section-title">Tutti gli altri medici</h4>
+          <!-- non-sponsored doctors -->
+          <h4 class="text-center mt-5 section-title">Tutti gli altri medici</h4>
 
-        <div
-          v-if="nonSponsoredPresent"
-          class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
-        >
-          <DoctorCard
-            v-for="user in nonSponsoredUsers"
-            :doctor="user"
-          ></DoctorCard>
-        </div>
-        <div v-else class="text-center pb-5 pt-4">
-          <span>Non ci sono altri medici</span>
+          <div
+            v-if="nonSponsoredPresent"
+            class="__cards-container d-flex flex-row justify-content-center flex-wrap gap-3 py-5"
+          >
+            <DoctorCard
+              v-for="user in nonSponsoredUsers"
+              :doctor="user"
+            ></DoctorCard>
+          </div>
+          <div v-else class="text-center pb-5 pt-4">
+            <span>Non ci sono altri medici</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- there are no doctors in the selected spec -->
-    <div
-      v-else
-      class="h-100 d-flex justify-content-center align-items-center p-2 alert-section"
-    >
-      <div role="alert" class="alert alert-warning text-center m-0 mt-4">
-        <span
-          >Non è stato trovato nessun dottore, riprova con un'altra
-          categoria</span
-        >
+      <!-- there are no doctors in the selected spec -->
+      <div
+        v-else
+        class="h-100 d-flex justify-content-center align-items-center p-2 alert-section"
+      >
+        <div role="alert" class="alert alert-warning text-center m-0 mt-4">
+          <span
+            >Non è stato trovato nessun dottore, riprova con un'altra
+            categoria</span
+          >
+        </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 

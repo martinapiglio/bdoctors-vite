@@ -11,6 +11,14 @@ export default {
       return currentYear;
     },
   },
+  methods: {
+    scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    },
+  },
 };
 </script>
 
@@ -42,6 +50,13 @@ export default {
         <a href="#"><i class="fa-brands fa-instagram"></i></a>
       </li>
     </ul>
+    <div
+      class="__slider text-white py-2 px-3 d-flex flex-column align-items-center"
+      @click="scrollToTop"
+    >
+      <span class="__arrow"><i class="fa-solid fa-chevron-up"></i></span>
+      <span class="__go-up">Torna su</span>
+    </div>
   </div>
 </template>
 
@@ -50,6 +65,7 @@ export default {
 
 .footer-custom {
   height: $footer-height;
+  position: relative;
   .footer-el {
     span {
       font-weight: bold;
@@ -58,6 +74,28 @@ export default {
 
     i {
       color: $green;
+    }
+  }
+  .__slider {
+    position: absolute;
+    right: 50%;
+    bottom: 28.5%;
+    background-color: $green;
+    cursor: pointer;
+    border-radius: 20px;
+    width: 100px;
+
+    .__arrow {
+      display: none;
+    }
+  }
+  .__slider:hover {
+    .__arrow {
+      display: block;
+      color: $blue;
+    }
+    .__go-up {
+      display: none;
     }
   }
 }

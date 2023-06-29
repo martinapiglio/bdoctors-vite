@@ -66,7 +66,7 @@ export default {
       id="navbarSupportedContent"
     >
       <!-- Left Side Of Navbar -->
-      <ul class="navbar-nav me-auto">
+      <ul class="navbar-nav me-auto text-center">
         <li class="nav-item links-container">
           <a class="links" href="/">Home</a>
         </li>
@@ -94,13 +94,14 @@ export default {
 @use "./style/_variables.scss" as *;
 
 .custom-nav {
-  padding: 0 5rem 0;
+  padding: 0 2rem 0;
   position: fixed;
   z-index: 2;
   width: 100%;
   min-height: $header-height;
   .logo-cont {
     height: $header-height;
+    min-width: 198px;
     .immagine {
       height: 100%;
     }
