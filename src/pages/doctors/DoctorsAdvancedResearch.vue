@@ -84,7 +84,7 @@ export default {
             this.getNonSponsoredUsers();
             setTimeout(() => {
               this.scrollFunction("displayed");
-            }, 200);
+            }, 800);
           } else {
             this.doctorsFound = false;
             this.isLoading = false;
@@ -102,34 +102,39 @@ export default {
     },
 
     filteredByVotes() {
-      axios
-        .get(
-          "http://127.0.0.1:8000/api/users" +
-            "?mainspec=" +
-            (this.specVModel == "" ? this.spec : this.specVModel) +
+      const baseUrl = "http://127.0.0.1:8000/api/users";
+
+      const url =
+        baseUrl +
+        (this.specVModel === "Tutte"
+          ? "?vote=" + this.userVote
+          : "?mainspec=" +
+            (this.specVModel === "" ? this.spec : this.specVModel) +
             "&vote=" +
-            this.userVote
-        )
-        .then((response) => {
-          if (response.data.success) {
-            this.users = response.data.results;
-            // console.log({ ...Object(this.users) });
-            this.specs = response.data.specs;
-            this.reviews = response.data.reviews;
-            this.votes = response.data.votes;
-            this.order = "";
-            this.getSponsoredUsers();
-            this.getNonSponsoredUsers();
+            this.userVote);
 
-            // console.log(this.users);
+      // Use the `url` variable as needed
 
-            this.doctorsFound = true;
-            this.scrollFunction("displayed");
-          } else {
-            this.doctorsFound = false;
-            this.isLoading = false;
-          }
-        });
+      axios.get(url).then((response) => {
+        if (response.data.success) {
+          this.users = response.data.results;
+          // console.log({ ...Object(this.users) });
+          this.specs = response.data.specs;
+          this.reviews = response.data.reviews;
+          this.votes = response.data.votes;
+          this.order = "";
+          this.getSponsoredUsers();
+          this.getNonSponsoredUsers();
+
+          // console.log(this.users);
+
+          this.doctorsFound = true;
+          this.scrollFunction("displayed");
+        } else {
+          this.doctorsFound = false;
+          this.isLoading = false;
+        }
+      });
     },
 
     sortedUsers(array) {
@@ -198,9 +203,39 @@ export default {
     },
 
     getFilteredDocsInPage() {
-      axios
-        .get("http://127.0.0.1:8000/api/users" + "?mainspec=" + this.specVModel)
-        .then((response) => {
+      if (this.specVModel != "Tutte") {
+        axios
+          .get(
+            "http://127.0.0.1:8000/api/users" + "?mainspec=" + this.specVModel
+          )
+          .then((response) => {
+            if (response.data.success) {
+              this.users = response.data.results;
+              this.specs = response.data.specs;
+              this.reviews = response.data.reviews;
+              this.votes = response.data.votes;
+
+              // console.log(this.users);
+
+              this.doctorsFound = true;
+              this.isLoading = false;
+              this.getSponsoredUsers();
+              this.getNonSponsoredUsers();
+              this.scrollFunction("displayed");
+
+              this.userVote = "";
+            } else {
+              this.doctorsFound = false;
+              this.isLoading = false;
+            }
+            this.$router.push({
+              name: "doctorsSearch",
+              params: { spec: this.specVModel },
+              replace: true,
+            });
+          });
+      } else {
+        axios.get("http://127.0.0.1:8000/api/users").then((response) => {
           if (response.data.success) {
             this.users = response.data.results;
             this.specs = response.data.specs;
@@ -220,12 +255,19 @@ export default {
             this.doctorsFound = false;
             this.isLoading = false;
           }
+          const str = this.specVModel;
+          const slug = str
+            .toLowerCase()
+            .replace(/\s+/g, "-")
+            .replace(/[^a-z0-9-]/g, "");
+
           this.$router.push({
             name: "doctorsSearch",
-            params: { spec: this.specVModel },
+            params: { spec: slug },
             replace: true,
           });
         });
+      }
     },
   },
 };
@@ -266,7 +308,7 @@ export default {
             v-model="specVModel"
             @change="getFilteredDocsInPage"
           >
-            <option value="">Tutte</option>
+            <option value="Tutte">Tutte</option>
             <option v-for="spec in specs" :value="spec.title">
               {{ spec.title }}
             </option>
