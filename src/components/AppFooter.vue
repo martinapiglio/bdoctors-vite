@@ -37,6 +37,15 @@ export default {
       >
     </div>
 
+    <div
+      class="__slider text-white py-2 px-3 d-flex flex-column align-items-center text-center d-none d-md-block"
+      @click="scrollToTop"
+    >
+      <span class="__arrow"
+        ><strong><i class="fa-solid fa-chevron-up"></i></strong
+      ></span>
+      <span class="__go-up"><strong>Torna su</strong></span>
+    </div>
     <ul
       class="nav col-md-4 justify-content-end list-unstyled d-flex gap-4 px-5 footer-el"
     >
@@ -50,15 +59,6 @@ export default {
         <a href="#"><i class="fa-brands fa-instagram"></i></a>
       </li>
     </ul>
-    <div
-      class="__slider text-white py-2 px-3 d-flex flex-column align-items-center"
-      @click="scrollToTop"
-    >
-      <span class="__arrow"
-        ><strong><i class="fa-solid fa-chevron-up"></i></strong
-      ></span>
-      <span class="__go-up"><strong>Torna su</strong></span>
-    </div>
   </div>
 </template>
 
@@ -67,7 +67,7 @@ export default {
 
 .footer-custom {
   height: $footer-height;
-  position: relative;
+
   .footer-el {
     span {
       font-weight: bold;
@@ -79,7 +79,6 @@ export default {
     }
   }
   .__slider {
-    position: absolute;
     right: 50%;
     bottom: 28.5%;
     background-color: $green;
